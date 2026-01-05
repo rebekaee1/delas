@@ -85,18 +85,20 @@ export default function RoomsPage() {
                   </div>
                 </CardContent>
                 
-                <CardFooter className="flex items-center justify-between pt-4 border-t border-sand-200">
-                  <div>
+                <CardFooter className="flex flex-col gap-4 pt-4 border-t border-sand-200">
+                  {/* Цена */}
+                  <div className="w-full">
                     <span className="text-h3 text-terracotta font-bold">
                       от {room.pricePerNight}₽
                     </span>
-                    <span className="text-small text-coal-light ml-1">/ ночь</span>
+                    <span className="text-small text-coal-light ml-2">/ ночь</span>
                   </div>
-                  <div className="flex gap-2">
-                    <Button asChild variant="outline" className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                  {/* Кнопки — полная ширина на мобильном */}
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
+                    <Button asChild variant="outline" size="lg" className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover flex-1">
                       <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
                     </Button>
-                    <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
+                    <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark btn-hover flex-1">
                       <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
                     </Button>
                   </div>

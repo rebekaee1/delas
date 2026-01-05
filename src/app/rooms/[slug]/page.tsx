@@ -94,26 +94,26 @@ export default async function RoomPage({ params }: RoomPageProps) {
 
               {/* Цена */}
               <div className="bg-sand-50 rounded-xl p-6 mb-6">
-                <div className="flex items-baseline gap-2">
-                  <span className="text-h1 text-terracotta font-bold">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="text-3xl sm:text-4xl md:text-h1 text-terracotta font-bold whitespace-nowrap">
                     от {room.pricePerNight}₽
                   </span>
-                  <span className="text-body text-coal-light">/ ночь</span>
+                  <span className="text-body text-coal-light whitespace-nowrap">/ ночь</span>
                 </div>
                 <p className="text-small text-coal-light mt-2">
                   Скидка {HOTEL.discounts.days7}% от 7 дней, {HOTEL.discounts.days30}% от 30 дней
                 </p>
               </div>
 
-              {/* CTA */}
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark btn-hover flex-1">
+              {/* CTA — большие кнопки */}
+              <div className="flex flex-col gap-3">
+                <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark btn-hover w-full h-14 text-lg">
                   <Link href={`/booking?room=${room.slug}`}>
                     <Calendar className="h-5 w-5 mr-2" />
                     Забронировать
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="border-coal text-coal hover:bg-coal hover:text-white flex-1">
+                <Button asChild variant="outline" size="lg" className="border-coal text-coal hover:bg-coal hover:text-white w-full h-12">
                   <a href={`tel:${HOTEL.contacts.phoneRaw}`}>
                     Позвонить
                   </a>

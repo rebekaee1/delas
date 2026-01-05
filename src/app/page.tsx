@@ -7,12 +7,11 @@ import Image from 'next/image'
 import { HeroSlideshow } from '@/components/home/HeroSlideshow'
 
 export default function Home() {
+  // Оптимизация: только 3 ключевых слайда для быстрой загрузки
   const heroSlides = [
     { src: '/images/reception_16x9.webp', alt: 'Ресепшен хостела DELAS' },
     { src: '/images/standard_16x9.webp', alt: 'Номер Стандарт' },
-    { src: '/images/organizations_16x9.webp', alt: 'Пространство для команд' },
     { src: '/images/dinnerhall_16x9.webp', alt: 'Кухня и обеденная зона' },
-    { src: '/images/hallway_16x9.webp', alt: 'Зона отдыха с кинотеатром' },
   ]
 
   return (
@@ -106,16 +105,16 @@ export default function Home() {
                 {/* Растягиваем пространство, чтобы кнопки были внизу */}
                 <div className="mt-auto">
                   <div className="mb-4">
-                    <span className="text-body-lg font-semibold text-coal">
+                    <span className="text-lg sm:text-body-lg font-semibold text-coal">
                       от {room.pricePerNight}₽
                     </span>
                   </div>
                   
                   <div className="flex flex-col gap-2">
-                    <Button size="sm" asChild className="w-full bg-terracotta hover:bg-terracotta-dark btn-hover">
+                    <Button asChild className="w-full h-11 bg-terracotta hover:bg-terracotta-dark btn-hover">
                       <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
                     </Button>
-                    <Button variant="outline" size="sm" asChild className="w-full border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                    <Button variant="outline" asChild className="w-full h-10 border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
                       <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
                     </Button>
                   </div>
