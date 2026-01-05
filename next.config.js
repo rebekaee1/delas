@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Standalone output для Docker
-  output: 'standalone',
+  // Отключаем standalone — TimeWeb Dockerfile не копирует public/ для него
+  // output: 'standalone',
   
   images: {
     remotePatterns: [
