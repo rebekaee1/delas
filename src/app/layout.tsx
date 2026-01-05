@@ -8,7 +8,6 @@ import { Header, Footer } from '@/components/layout'
 import { CookieConsent } from '@/components/layout/CookieConsent'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd'
-import { LoadingProvider } from '@/components/providers/LoadingProvider'
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
@@ -112,15 +111,13 @@ export default function RootLayout({
         <LocalBusinessJsonLd />
       </head>
       <body className="min-h-screen bg-sand font-body antialiased flex flex-col">
-        <LoadingProvider>
-          <YandexMetrika />
-          <Header />
-          <main className="flex-1">
-            {children}
-          </main>
-          <Footer />
-          <CookieConsent />
-        </LoadingProvider>
+        <YandexMetrika />
+        <Header />
+        <main className="flex-1">
+          {children}
+        </main>
+        <Footer />
+        <CookieConsent />
       </body>
     </html>
   )
