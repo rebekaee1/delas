@@ -1,0 +1,167 @@
+// Схема БД согласно TECH_STACK.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Типы размещения
+model RoomType {
+  id            String   @id @default(cuid())
+  name          String   // "Стандарт", "Комфорт", "Комфорт+", "Женский Комфорт+"
+  slug          String   @unique // "standart", "komfort", "komfort-plus", "zhenskiy-komfort-plus"
+  description   String
+  beds          Int      // Количество спальных мест в номере
+  pricePerNight Int      // Цена за ночь в рублях
+  amenities     String[] // ["Wi-Fi", "Кондиционер", "Душ", "Личная розетка"]
+  images        String[] // URLs в S3
+  maxGuests     Int      // Максимум гостей (обычно = beds)
+  totalUnits    Int      // Сколько таких номеров всего
+  isActive      Boolean  @default(true)
+  isWomenOnly   Boolean  @default(false) // Только для женщин
+  sortOrder     Int      @default(0) // Порядок отображения
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  bookings     Booking[]
+  blockedDates BlockedDate[]
+  
+  @@index([slug])
+  @@index([isActive])
+}
+
+// Бронирования
+model Booking {
+  id            String        @id @default(cuid())
+  
+  // Связь с типом номера
+  roomType      RoomType      @relation(fields: [roomTypeId], references: [id])
+  roomTypeId    String
+  
+  // Даты
+  checkIn       DateTime
+  checkOut      DateTime
+  nights        Int
+  
+  // Гость
+  guestName     String
+  guestPhone    String
+  guestEmail    String
+  guestsCount   Int           @default(1)
+  
+  // Оплата
+  basePrice     Int           // Базовая цена без скидки
+  discountPercent Int         @default(0) // Процент скидки
+  discountAmount  Int         @default(0) // Сумма скидки в рублях
+  totalPrice    Int           // Итоговая сумма в рублях
+  paymentStatus PaymentStatus @default(PENDING)
+  paymentId     String?       // ID платежа в ЮKassa
+  paidAt        DateTime?
+  
+  // Статус бронирования
+  status        BookingStatus @default(PENDING)
+  
+  // Служебное
+  comment       String?       // Комментарий гостя
+  adminNote     String?       // Заметка менеджера
+  source        String        @default("website") // Откуда пришёл (website, phone, telegram)
+  
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  @@index([checkIn, checkOut])
+  @@index([roomTypeId])
+  @@index([paymentStatus])
+  @@index([status])
+  @@index([guestEmail])
+  @@index([guestPhone])
+}
+
+enum PaymentStatus {
+  PENDING     // Ожидает оплаты
+  PROCESSING  // В процессе (перенаправлен на ЮKassa)
+  SUCCEEDED   // Оплачено
+  CANCELED    // Отменено пользователем
+  FAILED      // Ошибка оплаты
+  REFUNDED    // Возврат средств
+}
+
+enum BookingStatus {
+  PENDING     // Ожидает подтверждения/оплаты
+  CONFIRMED   // Подтверждено (оплачено)
+  CHECKED_IN  // Гость заселился
+  CHECKED_OUT // Гость выселился
+  CANCELLED   // Отменено
+  NO_SHOW     // Гость не приехал
+}
+
+// Настройки хостела (singleton)
+model HotelSettings {
+  id              String   @id @default("main")
+  name            String   @default("DELAS")
+  address         String   @default("г. Сочи, ул. Гагарина, 53а")
+  phone           String   @default("")
+  email           String   @default("")
+  telegramChatId  String   @default("") // ID чата для уведомлений
+  
+  checkInTime     String   @default("14:00")
+  checkOutTime    String   @default("12:00")
+  
+  // Скидки
+  discount2Days   Int      @default(5)  // Скидка от 2 дней (%)
+  discount7Days   Int      @default(10) // Скидка от 7 дней (%)
+  
+  // Дополнительные услуги
+  laundryPrice    Int      @default(200)  // Стирка
+  storagePrice    Int      @default(100)  // Хранение вещей в сутки
+  
+  updatedAt       DateTime @updatedAt
+}
+
+// Заблокированные даты (ремонт, спецмероприятия, полная занятость)
+model BlockedDate {
+  id          String    @id @default(cuid())
+  roomType    RoomType? @relation(fields: [roomTypeId], references: [id])
+  roomTypeId  String?   // null = все номера
+  date        DateTime
+  reason      String?   // Причина блокировки
+  
+  createdAt   DateTime  @default(now())
+  
+  @@unique([roomTypeId, date])
+  @@index([date])
+}
+
+// Заявки от организаций (B2B)
+model CorporateRequest {
+  id            String   @id @default(cuid())
+  companyName   String
+  contactName   String
+  phone         String
+  email         String
+  guestsCount   Int?
+  checkIn       DateTime?
+  checkOut      DateTime?
+  message       String?
+  
+  status        RequestStatus @default(NEW)
+  adminNote     String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  @@index([status])
+}
+
+enum RequestStatus {
+  NEW         // Новая заявка
+  IN_PROGRESS // В работе
+  COMPLETED   // Завершена
+  REJECTED    // Отклонена
+}
+

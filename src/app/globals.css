@@ -1,0 +1,264 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Подключение шрифтов */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@400;500;600;700&display=swap');
+
+/* Golos Text из Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;700&display=swap');
+
+@layer base {
+  :root {
+    /* Цветовая палитра DELAS - Тёплый минимализм */
+    
+    /* Фоны */
+    --bg-primary: 38 30% 94%; /* #F5F0E8 - Песок */
+    --bg-card: 40 33% 98%; /* #FDFCFA - Тёплый белый */
+    --bg-accent: 20 52% 53%; /* #C4704A - Терракота */
+    
+    /* Текст */
+    --text-primary: 30 12% 14%; /* #2D2A26 - Уголь */
+    --text-secondary: 24 9% 40%; /* #6B6560 - Серый тёплый */
+    --text-muted: 27 8% 67%; /* #B8B2AA - Серый светлый */
+    --text-inverse: 40 33% 98%; /* #FDFCFA */
+    
+    /* Акценты */
+    --accent-primary: 20 52% 53%; /* #C4704A - Терракота */
+    --accent-hover: 20 52% 40%; /* #A85A38 - Терракота тёмная */
+    --accent-secondary: 180 39% 39%; /* #3D8B8B - Морской */
+    
+    /* Состояния */
+    --success: 138 30% 42%; /* #4A8C5C */
+    --warning: 38 60% 56%; /* #D4A04A */
+    --error: 10 50% 53%; /* #C45C4A */
+    
+    /* Границы */
+    --border-light: 33 20% 88%; /* #E8E2DA */
+    --border-medium: 27 8% 67%; /* #B8B2AA */
+    
+    /* Shadcn/ui совместимость */
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --radius: 0.5rem;
+    
+    /* Шрифты */
+    --font-heading: 'Unbounded', system-ui, sans-serif;
+    --font-body: 'Golos Text', system-ui, sans-serif;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-sand text-coal font-body antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading tracking-tight;
+  }
+  
+  h1 {
+    @apply text-h1;
+  }
+  
+  h2 {
+    @apply text-h2;
+  }
+  
+  h3 {
+    @apply text-h3;
+  }
+  
+  /* Плавные переходы для интерактивных элементов */
+  a, button {
+    @apply transition-colors duration-150;
+  }
+  
+  /* Фокус стили */
+  :focus-visible {
+    @apply outline-none ring-2 ring-terracotta ring-offset-2 ring-offset-sand;
+  }
+}
+
+@layer components {
+  /* Контейнер */
+  .container {
+    @apply mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl;
+  }
+  
+  /* Кнопки */
+  .btn {
+    @apply inline-flex items-center justify-center rounded-lg font-medium transition-all duration-150;
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-terracotta focus-visible:ring-offset-2;
+    @apply disabled:pointer-events-none disabled:opacity-50;
+  }
+  
+  .btn-primary {
+    @apply btn bg-terracotta text-white hover:bg-terracotta-dark;
+    @apply px-6 py-3 text-body;
+  }
+  
+  .btn-secondary {
+    @apply btn border-2 border-terracotta text-terracotta bg-transparent;
+    @apply hover:bg-terracotta hover:text-white;
+    @apply px-6 py-3 text-body;
+  }
+  
+  .btn-ghost {
+    @apply btn text-terracotta hover:text-terracotta-dark;
+    @apply px-4 py-2 text-body;
+  }
+  
+  /* Карточки */
+  .card {
+    @apply bg-sand-50 rounded-xl shadow-card;
+    @apply transition-all duration-200;
+    @apply hover:shadow-card-hover hover:-translate-y-1;
+  }
+  
+  /* Бейджи */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-caption font-medium;
+  }
+  
+  .badge-primary {
+    @apply badge bg-terracotta/10 text-terracotta;
+  }
+  
+  .badge-sea {
+    @apply badge bg-sea/10 text-sea;
+  }
+  
+  .badge-success {
+    @apply badge bg-success/10 text-success;
+  }
+  
+  /* Секции */
+  .section {
+    @apply py-16 md:py-24;
+  }
+  
+  .section-title {
+    @apply text-h2 text-coal mb-4;
+  }
+  
+  .section-subtitle {
+    @apply text-body-lg text-coal-light mb-8;
+  }
+}
+
+@layer utilities {
+  /* Скрыть скроллбар */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Анимация появления */
+  .animate-in {
+    animation: fadeIn 300ms ease-out;
+  }
+  
+  /* Текстовый градиент */
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-terracotta to-terracotta-dark;
+  }
+}
+
+/* Уважаем prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Мобильные стили */
+@media (max-width: 640px) {
+  h1 {
+    @apply text-[2rem] leading-tight;
+  }
+  
+  h2 {
+    @apply text-[1.5rem];
+  }
+  
+  h3 {
+    @apply text-[1.25rem];
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+

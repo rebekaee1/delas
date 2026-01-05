@@ -1,0 +1,179 @@
+import Image from 'next/image'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
+
+export default function Home() {
+  return (
+    <>
+      {/* Hero секция */}
+      <section className="relative bg-sand py-20 md:py-32">
+        <div className="container">
+          <div className="flex flex-col items-center text-center">
+            {/* Логотип */}
+            <div className="mb-8">
+              <Image
+                src="/logo.png"
+                alt={HOTEL.fullName}
+                width={280}
+                height={100}
+                priority
+                className="h-auto w-auto"
+              />
+            </div>
+            
+            {/* Заголовок */}
+            <h1 className="text-h1 text-coal mb-4">
+              Койко-место от 600₽ в центре Сочи
+            </h1>
+            
+            {/* Подзаголовок */}
+            <p className="text-body-lg text-coal-light mb-8 max-w-2xl">
+              {HOTEL.address.street} {HOTEL.address.building} • Рядом с морем • Круглосуточно
+            </p>
+            
+            {/* CTA кнопка */}
+            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 py-6">
+              <Link href="/rooms">Проверить свободные места</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+      
+      {/* Что включено */}
+      <section className="section bg-sand-50">
+        <div className="container">
+          <h2 className="section-title text-center">Что включено</h2>
+          
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mt-8">
+            {HOTEL.amenities.slice(0, 6).map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col items-center p-4 bg-sand rounded-lg"
+              >
+                <span className="text-3xl mb-2">{item.icon}</span>
+                <span className="text-small text-coal-light text-center">
+                  {item.name}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Номера */}
+      <section className="section">
+        <div className="container">
+          <h2 className="section-title">Наши номера</h2>
+          <p className="section-subtitle">
+            Выберите подходящий вариант размещения
+          </p>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {ROOM_TYPES.map((room) => (
+              <div key={room.slug} className="card p-6">
+                {/* Заглушка для фото */}
+                <div className="aspect-[4/3] bg-sand-200 rounded-lg mb-4 flex items-center justify-center">
+                  <span className="text-coal-muted">Фото</span>
+                </div>
+                
+                {room.isWomenOnly && (
+                  <Badge variant="sea" className="mb-2">Только для женщин</Badge>
+                )}
+                
+                <h3 className="text-h3 text-coal mb-1">{room.name}</h3>
+                <p className="text-small text-coal-light mb-3">{room.beds} мест</p>
+                
+                <div className="flex items-center justify-between">
+                  <span className="text-body-lg font-semibold text-coal">
+                    от {room.pricePerNight}₽
+                  </span>
+                  <Button variant="outline" size="sm" asChild className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white">
+                    <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Скидки */}
+      <section className="section bg-terracotta/5">
+        <div className="container">
+          <h2 className="section-title text-center">
+            Скидки при длительном проживании
+          </h2>
+          
+          <div className="flex flex-col md:flex-row gap-6 justify-center mt-8">
+            <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0">
+              <span className="text-3xl font-heading font-bold text-terracotta">{HOTEL.discounts.days2}%</span>
+              <p className="text-body text-coal mt-2">от 2 дней</p>
+            </div>
+            <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0">
+              <span className="text-3xl font-heading font-bold text-terracotta">{HOTEL.discounts.days7}%</span>
+              <p className="text-body text-coal mt-2">от 7 дней</p>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      {/* Для организаций */}
+      <section className="section">
+        <div className="container">
+          <div className="bg-coal rounded-2xl p-8 md:p-12 text-center">
+            <h2 className="text-h2 text-white mb-4">Для организаций</h2>
+            <p className="text-body-lg text-sand-200 mb-6 max-w-2xl mx-auto">
+              Размещение бригад, безналичный расчёт, закрывающие документы.
+              Индивидуальные условия для корпоративных клиентов.
+            </p>
+            <Button asChild className="bg-terracotta hover:bg-terracotta-dark">
+              <Link href="/corporate">Оставить заявку</Link>
+            </Button>
+          </div>
+        </div>
+      </section>
+      
+      {/* Контакты */}
+      <section className="section bg-sand-50">
+        <div className="container">
+          <h2 className="section-title">Где мы находимся</h2>
+          
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Карта - заглушка (TODO: добавить Яндекс.Карты) */}
+            <div className="aspect-video bg-sand-200 rounded-xl flex items-center justify-center">
+              <span className="text-coal-muted">Карта</span>
+            </div>
+            
+            {/* Контактная информация */}
+            <div className="flex flex-col justify-center">
+              <h3 className="text-h3 text-coal mb-4">{HOTEL.fullName}</h3>
+              
+              <div className="space-y-4">
+                <p className="text-body text-coal-light">
+                  📍 {HOTEL.address.full}
+                </p>
+                <p className="text-body text-coal-light">
+                  🕐 Круглосуточно
+                </p>
+                <p className="text-body text-coal-light">
+                  📞 {HOTEL.contacts.phone}
+                </p>
+                <p className="text-body text-coal-light">
+                  ✉️ {HOTEL.contacts.email}
+                </p>
+              </div>
+              
+              <div className="mt-6">
+                <Button asChild className="bg-terracotta hover:bg-terracotta-dark">
+                  <a href={`tel:${HOTEL.contacts.phoneRaw}`}>Позвонить</a>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  )
+}

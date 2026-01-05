@@ -4,46 +4,46 @@ overview: "Полная реализация сайта хостела DELAS в 
 todos:
   - id: init-project
     content: Инициализация Next.js + Tailwind + Shadcn + Prisma
-    status: in_progress
+    status: completed
   - id: design-system
     content: Настройка дизайн-системы (CSS variables, шрифты, цвета)
-    status: pending
+    status: completed
     dependencies:
       - init-project
   - id: layout-components
     content: Создание Layout компонентов (Header, Footer, MobileNav)
-    status: pending
+    status: completed
     dependencies:
       - design-system
   - id: ui-components
     content: Создание UI компонентов (RoomCard, BookingForm, etc)
-    status: pending
+    status: completed
     dependencies:
       - design-system
   - id: pages
     content: Создание всех страниц (Home, Rooms, Booking, Contacts, Corporate)
-    status: pending
+    status: completed
     dependencies:
       - layout-components
       - ui-components
   - id: database
     content: Prisma schema + seed данные
-    status: pending
+    status: completed
     dependencies:
       - init-project
   - id: api-routes
     content: API endpoints (rooms, booking, payment)
-    status: pending
+    status: completed
     dependencies:
       - database
   - id: integrations
     content: Интеграции (ЮKassa, Telegram, Email)
-    status: pending
+    status: completed
     dependencies:
       - api-routes
   - id: seo
     content: SEO оптимизация (meta, sitemap, OG image)
-    status: pending
+    status: in_progress
     dependencies:
       - pages
   - id: testing
