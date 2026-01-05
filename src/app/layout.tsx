@@ -4,6 +4,7 @@ import './globals.css'
 import { Header, Footer } from '@/components/layout'
 import { CookieConsent } from '@/components/layout/CookieConsent'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
+import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd'
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
@@ -103,6 +104,8 @@ export default function RootLayout({
     <html lang="ru" className={`${unbounded.variable} ${golosText.variable}`}>
       <head>
         <meta name="theme-color" content="#C4704A" />
+        <OrganizationJsonLd />
+        <LocalBusinessJsonLd />
       </head>
       <body className="min-h-screen bg-sand font-body antialiased flex flex-col">
         <YandexMetrika />
