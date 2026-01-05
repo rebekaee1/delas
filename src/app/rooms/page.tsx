@@ -37,8 +37,8 @@ export default function RoomsPage() {
                 className="bg-sand-50 border-sand-200 overflow-hidden card-hover animate-fade-in-up"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                {/* Изображение */}
-                <div className="relative aspect-[16/9] bg-sand-200 overflow-hidden group">
+                {/* Изображение — кликабельное */}
+                <Link href={`/rooms/${room.slug}`} className="block relative aspect-[16/9] bg-sand-200 overflow-hidden group">
                   <Image
                     src={room.image16x9 || room.image4x3}
                     alt={room.name}
@@ -47,12 +47,14 @@ export default function RoomsPage() {
                     sizes="(min-width: 1024px) 50vw, 100vw"
                     priority={index === 0}
                   />
-                </div>
+                </Link>
                 
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between">
                     <div>
-                      <h2 className="text-h3 text-coal">{room.name}</h2>
+                      <Link href={`/rooms/${room.slug}`} className="hover:text-terracotta transition-colors">
+                        <h2 className="text-h3 text-coal">{room.name}</h2>
+                      </Link>
                       <div className="flex items-center gap-2 mt-1 text-coal-light">
                         <Users className="h-4 w-4" />
                         <span className="text-body">{room.beds} мест</span>
@@ -90,9 +92,14 @@ export default function RoomsPage() {
                     </span>
                     <span className="text-small text-coal-light ml-1">/ ночь</span>
                   </div>
-                  <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
-                    <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button asChild variant="outline" className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                      <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
+                    </Button>
+                    <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
+                      <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
+                    </Button>
+                  </div>
                 </CardFooter>
               </Card>
             ))}

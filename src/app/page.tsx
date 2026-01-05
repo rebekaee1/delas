@@ -74,9 +74,10 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {ROOM_TYPES.map((room, index) => (
-              <div 
-                key={room.slug} 
-                className="card p-6 card-hover animate-fade-in-up"
+              <Link 
+                key={room.slug}
+                href={`/rooms/${room.slug}`}
+                className="card p-6 card-hover animate-fade-in-up block"
                 style={{ animationDelay: `${200 + index * 100}ms` }}
               >
                 {/* Фото */}
@@ -102,11 +103,11 @@ export default function Home() {
                   <span className="text-body-lg font-semibold text-coal">
                     от {room.pricePerNight}₽
                   </span>
-                  <Button variant="outline" size="sm" asChild className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
-                    <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
-                  </Button>
+                  <span className="text-small text-terracotta font-medium hover:underline">
+                    Подробнее →
+                  </span>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         </div>
