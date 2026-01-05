@@ -41,7 +41,7 @@ export async function GET(request: NextRequest) {
         CREATE TYPE "PaymentStatus" AS ENUM ('PENDING', 'PROCESSING', 'SUCCEEDED', 'CANCELED', 'FAILED', 'REFUNDED');
       EXCEPTION
         WHEN duplicate_object THEN null;
-      END $$;
+      END $$
     `)
     
     await prisma.$executeRawUnsafe(`
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         CREATE TYPE "BookingStatus" AS ENUM ('PENDING', 'CONFIRMED', 'CHECKED_IN', 'CHECKED_OUT', 'CANCELLED', 'NO_SHOW');
       EXCEPTION
         WHEN duplicate_object THEN null;
-      END $$;
+      END $$
     `)
     
     await prisma.$executeRawUnsafe(`
@@ -57,7 +57,7 @@ export async function GET(request: NextRequest) {
         CREATE TYPE "RequestStatus" AS ENUM ('NEW', 'IN_PROGRESS', 'COMPLETED', 'REJECTED');
       EXCEPTION
         WHEN duplicate_object THEN null;
-      END $$;
+      END $$
     `)
     
     await prisma.$executeRawUnsafe(`
@@ -65,7 +65,7 @@ export async function GET(request: NextRequest) {
         CREATE TYPE "ConsentType" AS ENUM ('PERSONAL_DATA', 'MARKETING', 'COOKIES');
       EXCEPTION
         WHEN duplicate_object THEN null;
-      END $$;
+      END $$
     `)
     
     results.push('Enums created')
@@ -90,11 +90,11 @@ export async function GET(request: NextRequest) {
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "RoomType_pkey" PRIMARY KEY ("id")
-      );
-      CREATE UNIQUE INDEX IF NOT EXISTS "RoomType_slug_key" ON "RoomType"("slug");
-      CREATE INDEX IF NOT EXISTS "RoomType_slug_idx" ON "RoomType"("slug");
-      CREATE INDEX IF NOT EXISTS "RoomType_isActive_idx" ON "RoomType"("isActive");
+      )
     `)
+    await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "RoomType_slug_key" ON "RoomType"("slug")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "RoomType_slug_idx" ON "RoomType"("slug")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "RoomType_isActive_idx" ON "RoomType"("isActive")`)
     results.push('RoomType table created')
 
     // 3. Создаём таблицу Booking
@@ -127,14 +127,14 @@ export async function GET(request: NextRequest) {
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "Booking_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "Booking_roomTypeId_fkey" FOREIGN KEY ("roomTypeId") REFERENCES "RoomType"("id") ON DELETE RESTRICT ON UPDATE CASCADE
-      );
-      CREATE INDEX IF NOT EXISTS "Booking_checkIn_checkOut_idx" ON "Booking"("checkIn", "checkOut");
-      CREATE INDEX IF NOT EXISTS "Booking_roomTypeId_idx" ON "Booking"("roomTypeId");
-      CREATE INDEX IF NOT EXISTS "Booking_paymentStatus_idx" ON "Booking"("paymentStatus");
-      CREATE INDEX IF NOT EXISTS "Booking_status_idx" ON "Booking"("status");
-      CREATE INDEX IF NOT EXISTS "Booking_guestEmail_idx" ON "Booking"("guestEmail");
-      CREATE INDEX IF NOT EXISTS "Booking_guestPhone_idx" ON "Booking"("guestPhone");
+      )
     `)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_checkIn_checkOut_idx" ON "Booking"("checkIn", "checkOut")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_roomTypeId_idx" ON "Booking"("roomTypeId")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_paymentStatus_idx" ON "Booking"("paymentStatus")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_status_idx" ON "Booking"("status")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_guestEmail_idx" ON "Booking"("guestEmail")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Booking_guestPhone_idx" ON "Booking"("guestPhone")`)
     results.push('Booking table created')
 
     // 4. Создаём таблицу HotelSettings
@@ -155,7 +155,7 @@ export async function GET(request: NextRequest) {
         "storagePrice" INTEGER NOT NULL DEFAULT 100,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "HotelSettings_pkey" PRIMARY KEY ("id")
-      );
+      )
     `)
     results.push('HotelSettings table created')
 
@@ -170,10 +170,10 @@ export async function GET(request: NextRequest) {
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "BlockedDate_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "BlockedDate_roomTypeId_fkey" FOREIGN KEY ("roomTypeId") REFERENCES "RoomType"("id") ON DELETE SET NULL ON UPDATE CASCADE
-      );
-      CREATE UNIQUE INDEX IF NOT EXISTS "BlockedDate_roomTypeId_date_key" ON "BlockedDate"("roomTypeId", "date");
-      CREATE INDEX IF NOT EXISTS "BlockedDate_date_idx" ON "BlockedDate"("date");
+      )
     `)
+    await prisma.$executeRawUnsafe(`CREATE UNIQUE INDEX IF NOT EXISTS "BlockedDate_roomTypeId_date_key" ON "BlockedDate"("roomTypeId", "date")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "BlockedDate_date_idx" ON "BlockedDate"("date")`)
     results.push('BlockedDate table created')
 
     // 6. Создаём таблицу CorporateRequest
@@ -194,9 +194,9 @@ export async function GET(request: NextRequest) {
         "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
         CONSTRAINT "CorporateRequest_pkey" PRIMARY KEY ("id")
-      );
-      CREATE INDEX IF NOT EXISTS "CorporateRequest_status_idx" ON "CorporateRequest"("status");
+      )
     `)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "CorporateRequest_status_idx" ON "CorporateRequest"("status")`)
     results.push('CorporateRequest table created')
 
     // 7. Создаём таблицу Consent
@@ -214,11 +214,11 @@ export async function GET(request: NextRequest) {
         "bookingId" TEXT,
         CONSTRAINT "Consent_pkey" PRIMARY KEY ("id"),
         CONSTRAINT "Consent_bookingId_fkey" FOREIGN KEY ("bookingId") REFERENCES "Booking"("id") ON DELETE SET NULL ON UPDATE CASCADE
-      );
-      CREATE INDEX IF NOT EXISTS "Consent_email_idx" ON "Consent"("email");
-      CREATE INDEX IF NOT EXISTS "Consent_phone_idx" ON "Consent"("phone");
-      CREATE INDEX IF NOT EXISTS "Consent_type_idx" ON "Consent"("type");
+      )
     `)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Consent_email_idx" ON "Consent"("email")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Consent_phone_idx" ON "Consent"("phone")`)
+    await prisma.$executeRawUnsafe(`CREATE INDEX IF NOT EXISTS "Consent_type_idx" ON "Consent"("type")`)
     results.push('Consent table created')
 
     // 8. Заполняем начальные данные если нужно
