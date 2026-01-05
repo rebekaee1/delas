@@ -43,17 +43,17 @@ todos:
       - api-routes
   - id: seo
     content: SEO оптимизация (meta, sitemap, OG image)
-    status: in_progress
+    status: completed
     dependencies:
       - pages
   - id: testing
     content: Тестирование флоу бронирования
-    status: pending
+    status: completed
     dependencies:
       - integrations
   - id: deploy
     content: Деплой на TimeWeb Cloud
-    status: pending
+    status: completed
     dependencies:
       - testing
 ---

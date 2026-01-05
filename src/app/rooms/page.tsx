@@ -16,10 +16,10 @@ export default function RoomsPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-sand py-12 md:py-16">
+      <section className="bg-sand py-12 md:py-16 overflow-hidden">
         <div className="container">
-          <h1 className="text-h1 text-coal mb-4">Номера и цены</h1>
-          <p className="text-body-lg text-coal-light max-w-2xl">
+          <h1 className="text-h1 text-coal mb-4 animate-fade-in-up">Номера и цены</h1>
+          <p className="text-body-lg text-coal-light max-w-2xl animate-fade-in-up delay-100">
             Выберите подходящий тип размещения. Все номера оборудованы 
             всем необходимым для комфортного проживания.
           </p>
@@ -30,11 +30,15 @@ export default function RoomsPage() {
       <section className="section">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-8">
-            {ROOM_TYPES.map((room) => (
-              <Card key={room.slug} className="bg-sand-50 border-sand-200 overflow-hidden">
+            {ROOM_TYPES.map((room, index) => (
+              <Card 
+                key={room.slug} 
+                className="bg-sand-50 border-sand-200 overflow-hidden card-hover animate-fade-in-up"
+                style={{ animationDelay: `${index * 150}ms` }}
+              >
                 {/* Изображение-заглушка */}
-                <div className="aspect-[16/9] bg-sand-200 flex items-center justify-center">
-                  <span className="text-coal-muted text-lg">Фото номера</span>
+                <div className="aspect-[16/9] bg-sand-200 flex items-center justify-center overflow-hidden group">
+                  <span className="text-coal-muted text-lg group-hover:scale-110 transition-transform duration-300">Фото номера</span>
                 </div>
                 
                 <CardHeader className="pb-2">
@@ -78,7 +82,7 @@ export default function RoomsPage() {
                     </span>
                     <span className="text-small text-coal-light ml-1">/ ночь</span>
                   </div>
-                  <Button asChild className="bg-terracotta hover:bg-terracotta-dark">
+                  <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
                     <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
                   </Button>
                 </CardFooter>
@@ -91,13 +95,14 @@ export default function RoomsPage() {
       {/* Что включено */}
       <section className="section bg-sand-50">
         <div className="container">
-          <h2 className="section-title text-center">Во всех номерах</h2>
+          <h2 className="section-title text-center animate-fade-in-up">Во всех номерах</h2>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-8">
-            {HOTEL.amenities.map((item) => (
+            {HOTEL.amenities.map((item, index) => (
               <div
                 key={item.id}
-                className="flex flex-col items-center p-4 bg-sand rounded-lg text-center"
+                className="flex flex-col items-center p-4 bg-sand rounded-lg text-center card-hover animate-fade-in-up"
+                style={{ animationDelay: `${100 + index * 50}ms` }}
               >
                 <span className="text-3xl mb-2">{item.icon}</span>
                 <span className="text-body font-medium text-coal">{item.name}</span>
@@ -111,7 +116,7 @@ export default function RoomsPage() {
       {/* Скидки */}
       <section className="section">
         <div className="container">
-          <div className="bg-terracotta/10 rounded-2xl p-8 md:p-12 text-center">
+          <div className="bg-terracotta/10 rounded-2xl p-8 md:p-12 text-center animate-fade-in-up">
             <h2 className="text-h2 text-coal mb-4">
               Скидки при длительном проживании
             </h2>
@@ -121,11 +126,11 @@ export default function RoomsPage() {
             </p>
             
             <div className="flex flex-col md:flex-row gap-6 justify-center">
-              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0">
+              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0 card-hover animate-scale-in delay-200">
                 <span className="text-4xl font-heading font-bold text-terracotta">{HOTEL.discounts.days2}%</span>
                 <p className="text-body text-coal mt-2">при проживании от 2 дней</p>
               </div>
-              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0">
+              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0 card-hover animate-scale-in delay-300">
                 <span className="text-4xl font-heading font-bold text-terracotta">{HOTEL.discounts.days7}%</span>
                 <p className="text-body text-coal mt-2">при проживании от 7 дней</p>
               </div>
@@ -137,10 +142,10 @@ export default function RoomsPage() {
       {/* Дополнительные услуги */}
       <section className="section bg-sand-50">
         <div className="container">
-          <h2 className="section-title text-center">Дополнительные услуги</h2>
+          <h2 className="section-title text-center animate-fade-in-up">Дополнительные услуги</h2>
           
           <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto mt-8">
-            <div className="bg-sand rounded-xl p-6">
+            <div className="bg-sand rounded-xl p-6 card-hover animate-slide-in-left delay-100">
               <h3 className="text-h3 text-coal mb-2">{HOTEL.services.laundry.name}</h3>
               <p className="text-body text-coal-light mb-4">
                 Стирка и сушка ваших вещей
@@ -150,7 +155,7 @@ export default function RoomsPage() {
               </span>
             </div>
             
-            <div className="bg-sand rounded-xl p-6">
+            <div className="bg-sand rounded-xl p-6 card-hover animate-slide-in-right delay-100">
               <h3 className="text-h3 text-coal mb-2">{HOTEL.services.storage.name}</h3>
               <p className="text-body text-coal-light mb-4">
                 Безопасное хранение багажа
@@ -166,12 +171,12 @@ export default function RoomsPage() {
       {/* CTA */}
       <section className="section">
         <div className="container">
-          <div className="text-center">
+          <div className="text-center animate-fade-in-up">
             <h2 className="text-h2 text-coal mb-4">Готовы забронировать?</h2>
             <p className="text-body-lg text-coal-light mb-8 max-w-xl mx-auto">
               Выберите даты заезда и выезда, и мы покажем доступные места
             </p>
-            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8">
+            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 btn-hover">
               <Link href="/booking">Проверить доступность</Link>
             </Button>
           </div>

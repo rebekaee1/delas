@@ -39,22 +39,22 @@ export default function CorporatePage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-coal py-16 md:py-24">
+      <section className="bg-coal py-16 md:py-24 overflow-hidden">
         <div className="container">
           <div className="max-w-3xl">
-            <h1 className="text-h1 text-white mb-4">
+            <h1 className="text-h1 text-white mb-4 animate-fade-in-up">
               Для организаций и командировочных
             </h1>
-            <p className="text-body-lg text-sand-200 mb-8">
+            <p className="text-body-lg text-sand-200 mb-8 animate-fade-in-up delay-100">
               Размещаем бригады и сотрудников в командировках. 
               Работаем по договору с юридическими лицами, 
               предоставляем все необходимые документы.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark">
+            <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-200">
+              <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark btn-hover">
                 <a href="#form">Оставить заявку</a>
               </Button>
-              <Button asChild size="lg" variant="outline" className="border-sand-200 text-sand-200 hover:bg-sand-200 hover:text-coal">
+              <Button asChild size="lg" variant="outline" className="border-sand-200 text-sand-200 hover:bg-sand-200 hover:text-coal btn-hover">
                 <a href={`tel:${HOTEL.contacts.phoneRaw}`}>
                   <Phone className="h-5 w-5 mr-2" />
                   {HOTEL.contacts.phone}
@@ -68,11 +68,15 @@ export default function CorporatePage() {
       {/* Преимущества */}
       <section className="section">
         <div className="container">
-          <h2 className="section-title text-center">Почему выбирают нас</h2>
+          <h2 className="section-title text-center animate-fade-in-up">Почему выбирают нас</h2>
           
           <div className="grid md:grid-cols-2 gap-6 mt-12">
-            {benefits.map((benefit) => (
-              <Card key={benefit.title} className="bg-sand-50 border-sand-200">
+            {benefits.map((benefit, index) => (
+              <Card 
+                key={benefit.title} 
+                className="bg-sand-50 border-sand-200 card-hover animate-fade-in-up"
+                style={{ animationDelay: `${100 + index * 100}ms` }}
+              >
                 <CardHeader>
                   <CardTitle className="flex items-center gap-4">
                     <div className="p-3 bg-terracotta/10 rounded-xl">

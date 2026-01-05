@@ -16,10 +16,10 @@ export default function BookingPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-sand py-12 md:py-16">
+      <section className="bg-sand py-12 md:py-16 overflow-hidden">
         <div className="container">
-          <h1 className="text-h1 text-coal mb-4">Бронирование</h1>
-          <p className="text-body-lg text-coal-light max-w-2xl">
+          <h1 className="text-h1 text-coal mb-4 animate-fade-in-up">Бронирование</h1>
+          <p className="text-body-lg text-coal-light max-w-2xl animate-fade-in-up delay-100">
             Выберите даты проживания и тип номера. Оплата онлайн — 
             подтверждение придёт на вашу почту.
           </p>
