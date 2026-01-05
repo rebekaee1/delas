@@ -411,7 +411,7 @@ export function BookingForm() {
                 )}
               </Button>
               <p className="text-caption text-coal-light text-center">
-                Нажимая кнопку, вы соглашаетесь с{' '}
+                Нажимая кнопку «Перейти к оплате», вы соглашаетесь с{' '}
                 <a href="/terms" className="text-terracotta hover:underline">офертой</a>
                 {' '}и{' '}
                 <a href="/privacy" className="text-terracotta hover:underline">политикой конфиденциальности</a>

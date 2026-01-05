@@ -225,7 +225,7 @@ export default function CorporatePage() {
                   </Button>
                   
                   <p className="text-small text-coal-light text-center">
-                    Нажимая кнопку, вы соглашаетесь с{' '}
+                    Нажимая кнопку «Отправить заявку», вы соглашаетесь с{' '}
                     <Link href="/privacy" className="text-terracotta hover:underline">
                       политикой конфиденциальности
                     </Link>
