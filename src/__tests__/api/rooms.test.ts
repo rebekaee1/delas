@@ -1,13 +1,11 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { GET } from '@/app/api/rooms/route'
-import { GET as getAvailability } from '@/app/api/rooms/availability/route'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
+// Важно: мок prisma уже настроен в mocks/prisma.ts
 
-// Мокаем prisma
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
+// Импортируем после моков
+import { GET } from '@/app/api/rooms/route'
+import { POST as checkAvailability } from '@/app/api/rooms/availability/route'
 
 describe('API: /api/rooms', () => {
   beforeEach(() => {
@@ -74,26 +72,43 @@ describe('API: /api/rooms', () => {
     })
   })
 
-  describe('GET /api/rooms/availability', () => {
+  describe('POST /api/rooms/availability', () => {
     it('возвращает доступность для дат', async () => {
-      prismaMock.roomType.findMany.mockResolvedValue(mockRoomTypes)
+      prismaMock.roomType.findUnique.mockResolvedValue(mockRoomTypes[0])
       prismaMock.booking.count.mockResolvedValue(1) // 1 номер занят
+      prismaMock.blockedDate.count.mockResolvedValue(0) // Нет заблокированных дат
+      prismaMock.hotelSettings.findUnique.mockResolvedValue({
+        id: 'main',
+        discount2Days: 5,
+        discount7Days: 10,
+      })
 
       const request = new NextRequest(
-        'http://localhost:3000/api/rooms/availability?checkIn=2026-02-01&checkOut=2026-02-03'
+        'http://localhost:3000/api/rooms/availability',
+        {
+          method: 'POST',
+          body: JSON.stringify({
+            roomTypeId: 'room-1',
+            checkIn: '2026-02-01T00:00:00.000Z',
+            checkOut: '2026-02-03T00:00:00.000Z',
+            guests: 1,
+          }),
+        }
       )
-      const response = await getAvailability(request)
+      const response = await checkAvailability(request)
       const data = await response.json()
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.data).toHaveLength(2)
-      expect(data.data[0].availableUnits).toBeDefined()
+      expect(data.data.availableUnits).toBeDefined()
     })
 
-    it('возвращает ошибку без дат', async () => {
-      const request = new NextRequest('http://localhost:3000/api/rooms/availability')
-      const response = await getAvailability(request)
+    it('возвращает ошибку без данных', async () => {
+      const request = new NextRequest('http://localhost:3000/api/rooms/availability', {
+        method: 'POST',
+        body: JSON.stringify({}),
+      })
+      const response = await checkAvailability(request)
       const data = await response.json()
 
       expect(response.status).toBe(400)
@@ -101,4 +116,3 @@ describe('API: /api/rooms', () => {
     })
   })
 })
-

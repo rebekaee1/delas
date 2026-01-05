@@ -16,12 +16,6 @@ export const yookassaMock = {
   }),
 }
 
-// Мокаем модуль yookassa
-vi.mock('@/lib/yookassa', () => ({
-  createPayment: yookassaMock.createPayment,
-  getPayment: yookassaMock.getPayment,
-}))
-
 export function resetYookassaMocks() {
   yookassaMock.createPayment.mockReset()
   yookassaMock.getPayment.mockReset()
@@ -41,3 +35,8 @@ export function resetYookassaMocks() {
   })
 }
 
+// Мокаем модуль yookassa
+vi.mock('@/lib/yookassa', () => ({
+  createPayment: yookassaMock.createPayment,
+  getPayment: yookassaMock.getPayment,
+}))

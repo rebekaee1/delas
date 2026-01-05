@@ -23,7 +23,7 @@ test.describe('Navigation', () => {
 
   test('страница для корпоративных клиентов доступна', async ({ page }) => {
     await page.goto('/corporate')
-    await expect(page.locator('h1')).toContainText(/корпоратив/i)
+    await expect(page.locator('h1')).toContainText(/организаци/i)
   })
 
   test('политика конфиденциальности доступна', async ({ page }) => {

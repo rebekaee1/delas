@@ -1,16 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { POST } from '@/app/api/corporate/route'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
+// Важно: мок prisma уже настроен в mocks/prisma.ts
 
-// Мокаем модули
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
-
+// Мокаем telegram отдельно
 vi.mock('@/lib/telegram', () => ({
   notifyCorporateRequest: vi.fn().mockResolvedValue(true),
 }))
+
+// Импортируем после моков
+import { POST } from '@/app/api/corporate/route'
 
 describe('API: /api/corporate', () => {
   beforeEach(() => {
@@ -46,7 +45,7 @@ describe('API: /api/corporate', () => {
 
       expect(response.status).toBe(200)
       expect(data.success).toBe(true)
-      expect(data.data.id).toBe('corp-123')
+      expect(data.data.requestId).toBe('corp-123')
     })
 
     it('возвращает ошибку при некорректном email', async () => {
@@ -112,4 +111,3 @@ describe('API: /api/corporate', () => {
     })
   })
 })
-

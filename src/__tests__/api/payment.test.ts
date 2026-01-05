@@ -1,23 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { POST as createPayment } from '@/app/api/payment/create/route'
-import { POST as webhookHandler } from '@/app/api/payment/webhook/route'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
 import { yookassaMock, resetYookassaMocks } from '../mocks/yookassa'
+// Важно: моки уже настроены в файлах mocks/prisma.ts и mocks/yookassa.ts
 
-// Мокаем модули
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
-
-vi.mock('@/lib/yookassa', () => ({
-  createPayment: yookassaMock.createPayment,
-  getPayment: yookassaMock.getPayment,
-}))
-
+// Мокаем telegram отдельно, т.к. он не в моках
 vi.mock('@/lib/telegram', () => ({
   sendTelegramNotification: vi.fn().mockResolvedValue(true),
 }))
+
+// Импортируем после моков
+import { POST as createPayment } from '@/app/api/payment/create/route'
+import { POST as webhookHandler } from '@/app/api/payment/webhook/route'
 
 describe('API: /api/payment', () => {
   beforeEach(() => {
@@ -233,4 +227,3 @@ describe('API: /api/payment', () => {
     })
   })
 })
-

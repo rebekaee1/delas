@@ -1,5 +1,9 @@
 import '@testing-library/jest-dom'
-import { vi } from 'vitest'
+import { vi, afterEach } from 'vitest'
+
+// Импортируем моки для инициализации
+import './mocks/prisma'
+import './mocks/yookassa'
 
 // Мокаем window.matchMedia для тестов компонентов
 Object.defineProperty(window, 'matchMedia', {
@@ -45,4 +49,3 @@ window.scrollTo = vi.fn()
 afterEach(() => {
   vi.clearAllMocks()
 })
-

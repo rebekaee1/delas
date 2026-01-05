@@ -1,12 +1,8 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
-import { POST, GET } from '@/app/api/booking/route'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
-
-// Мокаем prisma
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
+// Важно: мок prisma уже настроен в mocks/prisma.ts
+import { POST, GET } from '@/app/api/booking/route'
 
 describe('API: /api/booking', () => {
   beforeEach(() => {
@@ -188,4 +184,3 @@ describe('API: /api/booking', () => {
     })
   })
 })
-

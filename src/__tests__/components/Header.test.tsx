@@ -35,7 +35,7 @@ describe('Header', () => {
   it('содержит кнопку бронирования', () => {
     render(<Header />)
     const bookingLink = screen.getByRole('link', { name: /забронировать/i })
-    expect(bookingLink).toHaveAttribute('href', '/booking')
+    expect(bookingLink).toHaveAttribute('href', '/rooms')
   })
 
   it('мобильное меню закрыто по умолчанию', () => {

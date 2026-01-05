@@ -31,13 +31,9 @@ export const prismaMock = {
   blockedDate: {
     findMany: vi.fn(),
     create: vi.fn(),
+    count: vi.fn(),
   },
 }
-
-// Мокаем модуль prisma
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
 
 export function resetPrismaMocks() {
   Object.values(prismaMock).forEach(model => {
@@ -49,3 +45,7 @@ export function resetPrismaMocks() {
   })
 }
 
+// Мокаем модуль prisma
+vi.mock('@/lib/prisma', () => ({
+  prisma: prismaMock,
+}))
