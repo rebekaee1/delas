@@ -26,7 +26,7 @@ const golosText = Golos_Text({
 
 // SEO метаданные согласно BUSINESS_INFO.md
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://delas-sochi.ru'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://hostel-delas.ru'),
   title: {
     default: 'Хостел DELAS в Сочи — койко-место от 600₽ | Центр города',
     template: '%s | Хостел DELAS Сочи',
@@ -61,24 +61,26 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'ru_RU',
-    url: '/',
+    url: 'https://hostel-delas.ru',
     siteName: 'Хостел DELAS',
-    title: 'Хостел DELAS в Сочи — койко-место от 600₽',
-    description: 'Уютный хостел в центре Сочи. Койко-места от 600₽/ночь. Женский номер, кухня 24/7, рядом с морем.',
+    title: 'Хостел DELAS в Сочи — уютный хостел от 600₽/ночь',
+    description: '🏨 Уютный хостел на ул. Гагарина 53а в центре Сочи. Койко-места от 600₽. Женский номер, кухня 24/7, 5 минут до моря. Wi-Fi, кондиционер. Бронируйте онлайн!',
     images: [
       {
-        url: '/og-image.jpg',
+        url: 'https://hostel-delas.ru/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Хостел DELAS в Сочи',
+        alt: 'Хостел DELAS — уютный хостел в центре Сочи',
+        type: 'image/jpeg',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Хостел DELAS в Сочи — койко-место от 600₽',
-    description: 'Уютный хостел в центре Сочи. Койко-места от 600₽/ночь.',
-    images: ['/og-image.jpg'],
+    title: 'Хостел DELAS в Сочи — от 600₽/ночь',
+    description: '🏨 Уютный хостел в центре Сочи. Женский номер, кухня 24/7, 5 минут до моря!',
+    images: ['https://hostel-delas.ru/og-image.jpg'],
+    site: '@delas_hostel',
   },
   robots: {
     index: true,
