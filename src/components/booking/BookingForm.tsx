@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { format, addDays, differenceInDays } from 'date-fns'
+import { format, addDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
-import { Calendar as CalendarIcon, Users, Loader2 } from 'lucide-react'
+import Link from 'next/link'
+import { Calendar as CalendarIcon, Users, Loader2, AlertCircle } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -40,6 +41,7 @@ import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
 
 export function BookingForm() {
   const searchParams = useSearchParams()
+  const router = useRouter()
   const roomFromUrl = searchParams.get('room')
 
   // Состояние выбора
@@ -47,6 +49,8 @@ export function BookingForm() {
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined)
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [consentPD, setConsentPD] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   // Форма гостя
   const form = useForm<GuestFormInput>({
@@ -73,32 +77,72 @@ export function BookingForm() {
 
   // Обработка отправки
   const onSubmit = async (data: GuestFormInput) => {
-    if (!selectedRoom || !checkIn || !checkOut) return
+    if (!selectedRoom || !checkIn || !checkOut || !consentPD) return
 
     setIsSubmitting(true)
+    setError(null)
     
     try {
-      // TODO: API запрос на создание бронирования
-      const bookingData = {
-        roomTypeSlug: selectedRoom,
-        checkIn: checkIn.toISOString(),
-        checkOut: checkOut.toISOString(),
-        ...data,
+      // Получаем roomTypeId из базы (или используем slug)
+      const roomData = ROOM_TYPES.find(r => r.slug === selectedRoom)
+      if (!roomData) {
+        throw new Error('Тип номера не найден')
       }
-      
-      console.log('Booking data:', bookingData)
-      
-      // Временно: показываем алерт
-      alert('Бронирование создано! (демо)')
-    } catch (error) {
-      console.error('Booking error:', error)
-      alert('Ошибка при создании бронирования')
+
+      // 1. Создаём бронирование
+      const bookingRes = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomTypeId: roomData.id || selectedRoom, // Используем slug как fallback
+          checkIn: checkIn.toISOString(),
+          checkOut: checkOut.toISOString(),
+          guestName: data.guestName,
+          guestPhone: data.guestPhone,
+          guestEmail: data.guestEmail,
+          guestsCount: data.guestsCount,
+          comment: data.comment || '',
+        }),
+      })
+
+      const bookingResult = await bookingRes.json()
+
+      if (!bookingResult.success) {
+        throw new Error(bookingResult.error || 'Ошибка создания бронирования')
+      }
+
+      const bookingId = bookingResult.data.bookingId
+
+      // 2. Создаём платёж
+      const paymentRes = await fetch('/api/payment/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bookingId }),
+      })
+
+      const paymentResult = await paymentRes.json()
+
+      if (!paymentResult.success) {
+        // Если ЮKassa не настроена, перенаправляем на страницу успеха без оплаты
+        if (paymentResult.error === 'Платёжная система не настроена') {
+          router.push(`/booking/success?id=${bookingId}`)
+          return
+        }
+        throw new Error(paymentResult.error || 'Ошибка создания платежа')
+      }
+
+      // 3. Перенаправляем на ЮKassa
+      window.location.href = paymentResult.data.confirmationUrl
+
+    } catch (err) {
+      console.error('Booking error:', err)
+      setError(err instanceof Error ? err.message : 'Ошибка при создании бронирования')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const isFormValid = selectedRoom && checkIn && checkOut && nights > 0
+  const isFormValid = selectedRoom && checkIn && checkOut && nights > 0 && consentPD
 
   return (
     <div className="grid lg:grid-cols-3 gap-8">
@@ -321,6 +365,36 @@ export function BookingForm() {
                   {...form.register('comment')}
                 />
               </div>
+
+              {/* Согласие на обработку персональных данных */}
+              <div className="space-y-2 pt-2">
+                <label className="flex items-start gap-3 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={consentPD}
+                    onChange={(e) => setConsentPD(e.target.checked)}
+                    className="mt-1 h-4 w-4 rounded border-sand-300 text-terracotta focus:ring-terracotta"
+                  />
+                  <span className="text-sm text-coal-light">
+                    Я даю согласие на обработку моих персональных данных в соответствии с{' '}
+                    <Link href="/privacy" className="text-terracotta hover:underline" target="_blank">
+                      Политикой конфиденциальности
+                    </Link>
+                    {' '}и принимаю условия{' '}
+                    <Link href="/terms" className="text-terracotta hover:underline" target="_blank">
+                      Публичной оферты
+                    </Link>
+                  </span>
+                </label>
+              </div>
+
+              {/* Ошибка */}
+              {error && (
+                <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-red-700">
+                  <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                  <p className="text-sm">{error}</p>
+                </div>
+              )}
             </form>
           </CardContent>
         </Card>
@@ -410,12 +484,11 @@ export function BookingForm() {
                   'Перейти к оплате'
                 )}
               </Button>
-              <p className="text-caption text-coal-light text-center">
-                Нажимая кнопку «Перейти к оплате», вы соглашаетесь с{' '}
-                <a href="/terms" className="text-terracotta hover:underline">офертой</a>
-                {' '}и{' '}
-                <a href="/privacy" className="text-terracotta hover:underline">политикой конфиденциальности</a>
-              </p>
+              {!consentPD && selectedRoomData && checkIn && checkOut && (
+                <p className="text-caption text-amber-600 text-center">
+                  Для продолжения необходимо дать согласие на обработку персональных данных
+                </p>
+              )}
             </CardFooter>
           </Card>
         </div>

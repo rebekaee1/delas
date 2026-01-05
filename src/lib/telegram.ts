@@ -147,4 +147,15 @@ ${request.message ? `\n💬 <b>Сообщение:</b>\n${request.message}` : ''
   return sendTelegramMessage({ text: message })
 }
 
+/**
+ * Отправка произвольного уведомления (Markdown формат)
+ */
+export async function sendTelegramNotification(text: string): Promise<boolean> {
+  return sendTelegramMessage({ 
+    text, 
+    parse_mode: 'MarkdownV2' 
+  })
+}
+
+
 

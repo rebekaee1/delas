@@ -63,6 +63,10 @@ model Booking {
   paymentId     String?       // ID платежа в ЮKassa
   paidAt        DateTime?
   
+  // Фискализация (54-ФЗ)
+  receiptId     String?       // ID чека в ЮKassa
+  receiptStatus String?       // pending, succeeded, canceled
+  
   // Статус бронирования
   status        BookingStatus @default(PENDING)
   
@@ -73,6 +77,9 @@ model Booking {
   
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+  
+  // Согласия на обработку ПД
+  consents      Consent[]
   
   @@index([checkIn, checkOut])
   @@index([roomTypeId])
@@ -164,5 +171,32 @@ enum RequestStatus {
   COMPLETED   // Завершена
   REJECTED    // Отклонена
 }
+
+// Согласие на обработку ПД (152-ФЗ)
+model Consent {
+  id          String      @id @default(cuid())
+  type        ConsentType
+  email       String?
+  phone       String?
+  ip          String
+  userAgent   String
+  accepted    Boolean
+  acceptedAt  DateTime    @default(now())
+  
+  // Связь с бронированием (если есть)
+  bookingId   String?
+  booking     Booking?    @relation(fields: [bookingId], references: [id])
+  
+  @@index([email])
+  @@index([phone])
+  @@index([type])
+}
+
+enum ConsentType {
+  PERSONAL_DATA // Согласие на обработку ПД
+  MARKETING     // Согласие на рекламу
+  COOKIES       // Согласие на cookies
+}
+
 
 

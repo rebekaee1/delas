@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
 import { Header, Footer } from '@/components/layout'
+import { CookieConsent } from '@/components/layout/CookieConsent'
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
@@ -109,6 +110,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <CookieConsent />
       </body>
     </html>
   )
