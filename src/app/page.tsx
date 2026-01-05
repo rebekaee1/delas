@@ -1,29 +1,25 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
 import { YandexMapStatic, YandexReviewsLink, getYandexMapsOrgUrl } from '@/components/ui/YandexMap'
+import Image from 'next/image'
+import { HeroSlideshow } from '@/components/home/HeroSlideshow'
 
 export default function Home() {
+  const heroSlides = [
+    { src: '/images/reception_16x9.webp', alt: 'Ресепшен хостела DELAS' },
+    { src: '/images/standard_16x9.webp', alt: 'Номер Стандарт' },
+    { src: '/images/organizations_16x9.webp', alt: 'Пространство для команд' },
+    { src: '/images/dinnerhall_16x9.webp', alt: 'Кухня и обеденная зона' },
+    { src: '/images/hallway_16x9.webp', alt: 'Зона отдыха с кинотеатром' },
+  ]
+
   return (
     <>
       {/* Hero секция с фото ресепшена */}
       <section className="relative min-h-[70vh] md:min-h-[80vh] overflow-hidden">
-        {/* Фоновое изображение */}
-        <div className="absolute inset-0">
-          <Image
-            src="/images/reception_16x9.webp"
-            alt="Ресепшен хостела DELAS в Сочи"
-            fill
-            priority
-            className="object-cover"
-            sizes="100vw"
-          />
-          {/* Диагональный градиент — очень тёмный левый нижний угол */}
-          <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/70 via-40% to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
-        </div>
+        <HeroSlideshow images={heroSlides} intervalMs={4000} />
         
         {/* Контент — внизу слева, чтобы не перекрывать логотип на стене */}
         <div className="container relative z-10 flex flex-col justify-end min-h-[70vh] md:min-h-[80vh] py-12 md:py-16">
@@ -83,9 +79,16 @@ export default function Home() {
                 className="card p-6 card-hover animate-fade-in-up"
                 style={{ animationDelay: `${200 + index * 100}ms` }}
               >
-                {/* Заглушка для фото */}
-                <div className="aspect-[4/3] bg-sand-200 rounded-lg mb-4 flex items-center justify-center overflow-hidden group">
-                  <span className="text-coal-muted group-hover:scale-110 transition-transform duration-300">Фото</span>
+                {/* Фото */}
+                <div className="relative aspect-[4/3] bg-sand-200 rounded-lg mb-4 overflow-hidden group">
+                  <Image
+                    src={room.image4x3}
+                    alt={room.name}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
+                    priority={index === 0}
+                  />
                 </div>
                 
                 {room.isWomenOnly && (

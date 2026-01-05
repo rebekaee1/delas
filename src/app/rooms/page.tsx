@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
@@ -36,9 +37,16 @@ export default function RoomsPage() {
                 className="bg-sand-50 border-sand-200 overflow-hidden card-hover animate-fade-in-up"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                {/* Изображение-заглушка */}
-                <div className="aspect-[16/9] bg-sand-200 flex items-center justify-center overflow-hidden group">
-                  <span className="text-coal-muted text-lg group-hover:scale-110 transition-transform duration-300">Фото номера</span>
+                {/* Изображение */}
+                <div className="relative aspect-[16/9] bg-sand-200 overflow-hidden group">
+                  <Image
+                    src={room.image16x9 || room.image4x3}
+                    alt={room.name}
+                    fill
+                    className="object-cover transition-transform duration-300 group-hover:scale-105"
+                    sizes="(min-width: 1024px) 50vw, 100vw"
+                    priority={index === 0}
+                  />
                 </div>
                 
                 <CardHeader className="pb-2">

@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { HOTEL, ROOM_TYPES, RoomType } from '@/constants/hotel'
@@ -61,9 +62,16 @@ export default async function RoomPage({ params }: RoomPageProps) {
       <section className="bg-sand pb-12">
         <div className="container">
           <div className="grid lg:grid-cols-2 gap-8">
-            {/* Фото заглушка */}
-            <div className="aspect-[4/3] bg-sand-200 rounded-xl flex items-center justify-center overflow-hidden animate-fade-in-up">
-              <span className="text-coal-muted text-lg">Фото номера</span>
+            {/* Фото номера */}
+            <div className="relative aspect-[4/3] bg-sand-200 rounded-xl overflow-hidden animate-fade-in-up">
+              <Image
+                src={room.image4x3}
+                alt={room.name}
+                fill
+                className="object-cover"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                priority
+              />
             </div>
 
             {/* Информация */}

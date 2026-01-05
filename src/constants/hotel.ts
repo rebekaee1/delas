@@ -131,6 +131,8 @@ export const ROOM_TYPES = [
     description: 'Койко-место в стандартной комнате',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Доступ на кухню'],
     isWomenOnly: false,
+    image4x3: '/images/standard_4x3.webp',
+    image16x9: '/images/standard_16x9.webp',
   },
   {
     slug: 'komfort',
@@ -140,6 +142,8 @@ export const ROOM_TYPES = [
     description: 'Улучшенный люкс номер с индивидуальной розеткой, USB-зарядкой и светильником',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
+    image4x3: '/images/comfort_4x3.webp',
+    image16x9: '/images/standard_16x9.webp',
   },
   {
     slug: 'komfort-plus',
@@ -149,6 +153,8 @@ export const ROOM_TYPES = [
     description: 'Повышенный комфорт, меньше людей в номере',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
+    image4x3: '/images/comfort+_4x3.webp',
+    image16x9: '/images/standard_16x9.webp',
   },
   {
     slug: 'zhenskiy-komfort-plus',
@@ -158,6 +164,8 @@ export const ROOM_TYPES = [
     description: 'Только для женщин, максимальная приватность',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: true,
+    image4x3: '/images/women_4x3.webp',
+    image16x9: '/images/standard_16x9.webp',
   },
 ] as const
 
