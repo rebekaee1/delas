@@ -1,5 +1,5 @@
 # 🚀 Инструкция по запуску в Production (TimeWeb Cloud)
-
+eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCIsImtpZCI6IjFrYnhacFJNQGJSI0tSbE1xS1lqIn0.eyJ1c2VyIjoiZXE3OTMzNTYiLCJ0eXBlIjoiYXBpX2tleSIsImFwaV9rZXlfaWQiOiJiZWVhZGM0MC04NTI3LTQ5YTUtOGYwZi0yMzYwNDJkMTk1MmMiLCJpYXQiOjE3Njc2NDU3ODl9.u3P-Y_VKcXm2sM5AEBdufSVrYdlZd-toI28vOS12PnsuuaCZKjOcrM8UAXtnkRXl2xIOvWuQ7Z-4rBdHSzd-er-RLeRQulI-fw7Nhc5ptDzNfbx6YeRjS2Rc27L6Sr5psvYrjqkKny02I27ne9o76R0jVR3B6EiN1B-m-QdUxr_QEqE1zXVEaaJuYSp8IvSAOK_0P4p3YsxczU74EJp-gftopll6igD1Pl9p5e5OMvSTNiATrEeku9f4PClXIrUjwWqUpCypj2sVGozkPPgdESdvxnFdPMyhp93XCvGieMwxjMtlO0tvsX16qe_NjM8Sly9aAzYnX4n78WSvwY5im90lSi1aqUvCLgKppejvB9kZ9EifgWEp_OGsbQ6DK2DP7NrjHhK4tnOYelFo6WNPf_CXLPa2PdGQHzzZg1nxe8bSOlAuzK549eBxEb37KvD-5ucRKNaus7YsmD82IFiqg22pAMJ07x96skLZbEDZXQVvXt-NzHQXrP8b8w2tFagE
 ## Шаг 1: Создание базы данных PostgreSQL
 
 ### 1.1 Создать БД в TimeWeb Cloud
