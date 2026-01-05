@@ -24,34 +24,24 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-b from-coal/60 via-coal/40 to-coal/70" />
         </div>
         
-        {/* Контент */}
-        <div className="container relative z-10 flex flex-col items-center justify-center min-h-[70vh] md:min-h-[80vh] text-center py-12">
-          {/* Логотип */}
-          <div className="mb-8 animate-fade-in-up">
-            <Image
-              src="/logo.png"
-              alt={HOTEL.fullName}
-              width={280}
-              height={100}
-              priority
-              className="h-auto w-auto brightness-0 invert"
-            />
+        {/* Контент — внизу слева, чтобы не перекрывать логотип на стене */}
+        <div className="container relative z-10 flex flex-col justify-end min-h-[70vh] md:min-h-[80vh] py-12 md:py-16">
+          <div className="max-w-2xl">
+            {/* Заголовок */}
+            <h1 className="text-h1 text-white mb-4 animate-fade-in-up drop-shadow-lg">
+              Койко-место от 600₽<br className="hidden sm:block" /> в центре Сочи
+            </h1>
+            
+            {/* Подзаголовок */}
+            <p className="text-body-lg text-sand-100 mb-8 animate-fade-in-up delay-100 drop-shadow-md">
+              {HOTEL.address.street} {HOTEL.address.building} • Рядом с морем • Круглосуточно
+            </p>
+            
+            {/* CTA кнопка */}
+            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 py-6 btn-hover animate-fade-in-up delay-200 shadow-xl">
+              <Link href="/rooms">Проверить свободные места</Link>
+            </Button>
           </div>
-          
-          {/* Заголовок */}
-          <h1 className="text-h1 text-white mb-4 animate-fade-in-up delay-100 drop-shadow-lg">
-            Койко-место от 600₽ в центре Сочи
-          </h1>
-          
-          {/* Подзаголовок */}
-          <p className="text-body-lg text-sand-100 mb-8 max-w-2xl animate-fade-in-up delay-200 drop-shadow-md">
-            {HOTEL.address.street} {HOTEL.address.building} • Рядом с морем • Круглосуточно
-          </p>
-          
-          {/* CTA кнопка */}
-          <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 py-6 btn-hover animate-fade-in-up delay-300 shadow-xl">
-            <Link href="/rooms">Проверить свободные места</Link>
-          </Button>
         </div>
       </section>
       
