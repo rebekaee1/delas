@@ -26,6 +26,13 @@ export const metadata: Metadata = {
     template: '%s | Хостел DELAS Сочи',
   },
   description: 'Уютный хостел DELAS на ул. Гагарина 53а в Сочи. Койко-места от 600₽/ночь. Женский номер, кухня 24/7, рядом с морем. Бронируйте онлайн!',
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+    shortcut: '/favicon.svg',
+    apple: '/logo.png',
+  },
   keywords: [
     'хостел сочи',
     'хостел сочи недорого',
@@ -93,10 +100,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${unbounded.variable} ${golosText.variable}`}>
       <head>
-        {/* Favicon */}
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        
+        <meta name="theme-color" content="#C4704A" />
         {/* Яндекс.Метрика и другие скрипты добавить позже */}
       </head>
       <body className="min-h-screen bg-sand font-body antialiased flex flex-col">
