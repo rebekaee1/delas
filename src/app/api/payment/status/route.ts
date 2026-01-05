@@ -68,7 +68,8 @@ export async function GET(request: NextRequest) {
       const payment = await getPayment(booking.paymentId)
 
       // Обновляем статус в БД если изменился
-      if (payment.status === 'succeeded' && booking.paymentStatus !== 'SUCCEEDED') {
+      // (booking.paymentStatus !== 'SUCCEEDED' уже проверено выше)
+      if (payment.status === 'succeeded') {
         await prisma.booking.update({
           where: { id: bookingId },
           data: {

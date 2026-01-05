@@ -40,7 +40,7 @@ export default function RoomsPage() {
                 {/* Изображение — кликабельное */}
                 <Link href={`/rooms/${room.slug}`} className="block relative aspect-[16/9] bg-sand-200 overflow-hidden group">
                   <Image
-                    src={room.image16x9 || room.image4x3}
+                    src={room.image16x9}
                     alt={room.name}
                     fill
                     className="object-cover transition-transform duration-300 group-hover:scale-105"

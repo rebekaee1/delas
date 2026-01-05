@@ -93,8 +93,8 @@ export default function TermsPage() {
 
               <h2 className="text-h3 text-coal mt-8 mb-4">4. Правила заезда и выезда</h2>
               <ul className="list-disc list-inside text-body text-coal-light space-y-2 ml-4">
-                <li><strong>Заезд:</strong> после {HOTEL.checkIn}</li>
-                <li><strong>Выезд:</strong> до {HOTEL.checkOut}</li>
+                <li><strong>Заезд:</strong> после {HOTEL.schedule.checkIn}</li>
+                <li><strong>Выезд:</strong> до {HOTEL.schedule.checkOut}</li>
                 <li>Ранний заезд / поздний выезд возможен по предварительному согласованию при наличии свободных мест</li>
               </ul>
               <p className="text-body text-coal-light mt-4">

@@ -79,7 +79,7 @@ async function checkDatabase() {
       })
     }
 
-    if (booking.paymentStatus === 'CANCELLED' && booking.status === 'CONFIRMED') {
+    if (booking.paymentStatus === 'CANCELED' && booking.status === 'CONFIRMED') {
       issues.push({
         type: 'error',
         table: 'Booking',

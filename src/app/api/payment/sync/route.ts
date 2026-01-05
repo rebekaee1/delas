@@ -80,14 +80,14 @@ export async function POST(request: NextRequest) {
           })
 
         } else if (payment.status === 'canceled') {
-          newPaymentStatus = 'CANCELLED'
+          newPaymentStatus = 'CANCELED'
           newBookingStatus = 'CANCELLED'
           updated = true
 
           await prisma.booking.update({
             where: { id: booking.id },
             data: {
-              paymentStatus: 'CANCELLED',
+              paymentStatus: 'CANCELED',
               status: 'CANCELLED',
             },
           })
