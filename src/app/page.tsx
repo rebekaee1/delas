@@ -8,37 +8,50 @@ import { YandexMapStatic, YandexReviewsLink, getYandexMapsOrgUrl } from '@/compo
 export default function Home() {
   return (
     <>
-      {/* Hero секция */}
-      <section className="relative bg-sand py-20 md:py-32 overflow-hidden">
-        <div className="container">
-          <div className="flex flex-col items-center text-center">
-            {/* Логотип */}
-            <div className="mb-8 animate-fade-in-up">
-              <Image
-                src="/logo.png"
-                alt={HOTEL.fullName}
-                width={280}
-                height={100}
-                priority
-                className="h-auto w-auto"
-              />
-            </div>
-            
-            {/* Заголовок */}
-            <h1 className="text-h1 text-coal mb-4 animate-fade-in-up delay-100">
-              Койко-место от 600₽ в центре Сочи
-            </h1>
-            
-            {/* Подзаголовок */}
-            <p className="text-body-lg text-coal-light mb-8 max-w-2xl animate-fade-in-up delay-200">
-              {HOTEL.address.street} {HOTEL.address.building} • Рядом с морем • Круглосуточно
-            </p>
-            
-            {/* CTA кнопка */}
-            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 py-6 btn-hover animate-fade-in-up delay-300">
-              <Link href="/rooms">Проверить свободные места</Link>
-            </Button>
+      {/* Hero секция с фото ресепшена */}
+      <section className="relative min-h-[70vh] md:min-h-[80vh] overflow-hidden">
+        {/* Фоновое изображение */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/reception_16x9.webp"
+            alt="Ресепшен хостела DELAS в Сочи"
+            fill
+            priority
+            className="object-cover"
+            sizes="100vw"
+          />
+          {/* Затемняющий оверлей для читаемости текста */}
+          <div className="absolute inset-0 bg-gradient-to-b from-coal/60 via-coal/40 to-coal/70" />
+        </div>
+        
+        {/* Контент */}
+        <div className="container relative z-10 flex flex-col items-center justify-center min-h-[70vh] md:min-h-[80vh] text-center py-12">
+          {/* Логотип */}
+          <div className="mb-8 animate-fade-in-up">
+            <Image
+              src="/logo.png"
+              alt={HOTEL.fullName}
+              width={280}
+              height={100}
+              priority
+              className="h-auto w-auto brightness-0 invert"
+            />
           </div>
+          
+          {/* Заголовок */}
+          <h1 className="text-h1 text-white mb-4 animate-fade-in-up delay-100 drop-shadow-lg">
+            Койко-место от 600₽ в центре Сочи
+          </h1>
+          
+          {/* Подзаголовок */}
+          <p className="text-body-lg text-sand-100 mb-8 max-w-2xl animate-fade-in-up delay-200 drop-shadow-md">
+            {HOTEL.address.street} {HOTEL.address.building} • Рядом с морем • Круглосуточно
+          </p>
+          
+          {/* CTA кнопка */}
+          <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 py-6 btn-hover animate-fade-in-up delay-300 shadow-xl">
+            <Link href="/rooms">Проверить свободные места</Link>
+          </Button>
         </div>
       </section>
       
