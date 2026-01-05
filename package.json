@@ -1,8 +1,9 @@
 {
   "name": "delas",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
-  "description": "Сайт хостела DELAS в Сочи",
+  "description": "Сайт хостела DELAS в Сочи - cache bust",
+  "cacheVersion": "2025-01-06",
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
