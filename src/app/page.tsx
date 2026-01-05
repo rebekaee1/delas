@@ -204,18 +204,18 @@ export default function Home() {
       </section>
       
       {/* Контакты */}
-      <section className="py-16 md:py-20 bg-sand-50">
+      <section className="py-16 md:py-20 bg-sand">
         <div className="container">
           <h2 className="section-title animate-fade-in-up">Где мы находимся</h2>
           
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {/* Яндекс.Карты */}
-            <div className="animate-slide-in-left">
-              <YandexMapStatic className="aspect-video min-h-[300px]" />
+            <div className="animate-slide-in-left rounded-xl overflow-hidden shadow-lg">
+              <YandexMapStatic className="h-full min-h-[350px] md:min-h-[400px]" />
             </div>
             
             {/* Контактная информация */}
-            <div className="flex flex-col justify-center animate-slide-in-right bg-sand-50 rounded-xl p-6 md:p-8">
+            <div className="flex flex-col justify-center animate-slide-in-right bg-white rounded-xl p-6 md:p-8 shadow-lg">
               <h3 className="text-h3 text-coal mb-6">{HOTEL.fullName}</h3>
               
               <div className="space-y-4">
@@ -239,7 +239,7 @@ export default function Home() {
                 </a>
               </div>
               
-              <div className="flex gap-4 mt-8">
+              <div className="flex flex-wrap gap-4 mt-8">
                 <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
                   <a href={`tel:${HOTEL.contacts.phoneRaw}`}>Позвонить</a>
                 </Button>
