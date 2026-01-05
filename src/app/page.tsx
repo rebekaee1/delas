@@ -20,8 +20,9 @@ export default function Home() {
             className="object-cover"
             sizes="100vw"
           />
-          {/* Затемняющий оверлей для читаемости текста */}
-          <div className="absolute inset-0 bg-gradient-to-b from-coal/60 via-coal/40 to-coal/70" />
+          {/* Затемняющий оверлей — сильнее слева где текст */}
+          <div className="absolute inset-0 bg-gradient-to-r from-coal/90 via-coal/60 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-coal/70 via-transparent to-coal/20" />
         </div>
         
         {/* Контент — внизу слева, чтобы не перекрывать логотип на стене */}
