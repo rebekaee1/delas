@@ -241,7 +241,9 @@
 /* Мобильные стили */
 @media (max-width: 640px) {
   h1 {
-    @apply text-[2rem] leading-tight;
+    @apply text-[1.75rem] leading-tight;
+    word-break: break-word;
+    hyphens: auto;
   }
   
   h2 {
