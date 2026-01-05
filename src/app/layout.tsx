@@ -1,3 +1,6 @@
+// Полностью динамический рендеринг (без SSG при сборке)
+export const dynamic = 'force-dynamic'
+
 import type { Metadata } from 'next'
 import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
