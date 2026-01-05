@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { format, addDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
@@ -28,7 +28,20 @@ import { ROOM_TYPES } from '@/constants/hotel'
 // Секретный ключ для доступа (добавьте в .env.local: ADMIN_SECRET=ваш_секрет)
 const ADMIN_SECRET = process.env.NEXT_PUBLIC_ADMIN_SECRET || 'delas2024admin'
 
+// Обёртка для Suspense (необходима для useSearchParams)
 export default function QuickBookingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-sand">
+        <Loader2 className="h-8 w-8 animate-spin text-terracotta" />
+      </div>
+    }>
+      <QuickBookingContent />
+    </Suspense>
+  )
+}
+
+function QuickBookingContent() {
   const searchParams = useSearchParams()
   const secretKey = searchParams.get('key')
   
