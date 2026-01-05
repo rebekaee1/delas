@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { sendTelegramNotification } from '@/lib/telegram'
+import { notifyPaymentSuccess } from '@/lib/telegram'
 import { WebhookEvent } from '@/lib/yookassa'
 
 /**
@@ -120,8 +120,14 @@ async function handlePaymentSucceeded(
   console.log(`[YooKassa Webhook] Payment succeeded for booking: ${booking.id}`)
 
   // Отправляем уведомление в Telegram
-  const message = formatTelegramNotification(booking, payment)
-  await sendTelegramNotification(message)
+  await notifyPaymentSuccess({
+    id: booking.id,
+    guestName: booking.guestName,
+    guestPhone: booking.guestPhone,
+    roomTypeName: booking.roomType.name,
+    checkIn: booking.checkIn,
+    totalPrice: booking.totalPrice,
+  })
 
   // TODO: Отправить email подтверждение гостю
   // await sendConfirmationEmail(booking)
@@ -145,57 +151,4 @@ async function handlePaymentCanceled(
   console.log(`[YooKassa Webhook] Payment canceled for booking: ${booking.id}`)
 }
 
-/**
- * Форматирование уведомления для Telegram
- */
-function formatTelegramNotification(
-  booking: {
-    id: string
-    guestName: string
-    guestPhone: string
-    guestEmail: string
-    totalPrice: number
-    checkIn: Date
-    checkOut: Date
-    nights: number
-    roomType: { name: string }
-  },
-  payment: { amount: { value: string } }
-): string {
-  const checkInDate = new Date(booking.checkIn).toLocaleDateString('ru-RU')
-  const checkOutDate = new Date(booking.checkOut).toLocaleDateString('ru-RU')
-
-  return `✅ *Новое бронирование оплачено!*
-
-📋 *Бронирование #${booking.id.slice(-8).toUpperCase()}*
-
-👤 *Гость:* ${escapeMarkdown(booking.guestName)}
-📱 *Телефон:* ${formatPhone(booking.guestPhone)}
-📧 *Email:* ${escapeMarkdown(booking.guestEmail)}
-
-🏠 *Номер:* ${escapeMarkdown(booking.roomType.name)}
-📅 *Заезд:* ${checkInDate}
-📅 *Выезд:* ${checkOutDate}
-🌙 *Ночей:* ${booking.nights}
-
-💰 *Оплачено:* ${payment.amount.value} ₽`
-}
-
-/**
- * Экранирование специальных символов для Telegram Markdown
- */
-function escapeMarkdown(text: string): string {
-  return text.replace(/[_*[\]()~`>#+=|{}.!-]/g, '\\$&')
-}
-
-/**
- * Форматирование телефона
- */
-function formatPhone(phone: string): string {
-  const digits = phone.replace(/\D/g, '')
-  if (digits.length === 11) {
-    return `+7 (${digits.slice(1, 4)}) ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9)}`
-  }
-  return phone
-}
 

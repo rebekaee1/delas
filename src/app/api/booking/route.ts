@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createBookingSchema } from '@/lib/validators'
 import { calculateDiscount, calculateTotalPrice, calculateNights } from '@/lib/utils'
+import { notifyNewBooking } from '@/lib/telegram'
 
 /**
  * POST /api/booking
@@ -115,8 +116,19 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // TODO: Отправить уведомление в Telegram
-    // TODO: Создать платёж в ЮKassa и получить URL
+    // Отправляем уведомление в Telegram (асинхронно, не блокируем ответ)
+    notifyNewBooking({
+      id: booking.id,
+      guestName: booking.guestName,
+      guestPhone: booking.guestPhone,
+      guestEmail: booking.guestEmail,
+      roomTypeName: booking.roomType.name,
+      checkIn: booking.checkIn,
+      checkOut: booking.checkOut,
+      nights: booking.nights,
+      totalPrice: booking.totalPrice,
+      guestsCount: booking.guestsCount,
+    }).catch(err => console.error('Failed to send Telegram notification:', err))
 
     return NextResponse.json({
       success: true,

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { corporateRequestSchema } from '@/lib/validators'
+import { notifyCorporateRequest } from '@/lib/telegram'
 
 /**
  * POST /api/corporate
@@ -48,7 +49,17 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // TODO: Отправить уведомление в Telegram
+    // Отправляем уведомление в Telegram (асинхронно, не блокируем ответ)
+    notifyCorporateRequest({
+      id: corporateRequest.id,
+      companyName: corporateRequest.companyName,
+      contactName: corporateRequest.contactName,
+      phone: corporateRequest.phone,
+      email: corporateRequest.email,
+      guestsCount: corporateRequest.guestsCount,
+      message: corporateRequest.message,
+    }).catch(err => console.error('Failed to send corporate Telegram notification:', err))
+
     // TODO: Отправить email подтверждение клиенту
 
     return NextResponse.json({
