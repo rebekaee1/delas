@@ -25,10 +25,17 @@ export async function POST(request: NextRequest) {
 
     const { roomTypeId, checkIn, checkOut, guests } = validation.data
 
-    // Получаем тип номера
-    const roomType = await prisma.roomType.findUnique({
+    // Получаем тип номера (поиск по ID или по slug)
+    let roomType = await prisma.roomType.findUnique({
       where: { id: roomTypeId, isActive: true },
     })
+    
+    // Если не нашли по ID, пробуем по slug
+    if (!roomType) {
+      roomType = await prisma.roomType.findFirst({
+        where: { slug: roomTypeId, isActive: true },
+      })
+    }
 
     if (!roomType) {
       return NextResponse.json(
@@ -48,10 +55,10 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Считаем количество бронирований на эти даты
+    // Считаем количество бронирований на эти даты (используем реальный ID)
     const overlappingBookings = await prisma.booking.count({
       where: {
-        roomTypeId,
+        roomTypeId: roomType.id,
         status: { in: ['PENDING', 'CONFIRMED', 'CHECKED_IN'] },
         OR: [
           // Бронирование начинается в период
@@ -64,11 +71,11 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Проверяем заблокированные даты
+    // Проверяем заблокированные даты (используем реальный ID)
     const blockedDates = await prisma.blockedDate.count({
       where: {
         OR: [
-          { roomTypeId: roomTypeId },
+          { roomTypeId: roomType.id },
           { roomTypeId: null }, // Глобальные блокировки
         ],
         date: { gte: checkIn, lt: checkOut },

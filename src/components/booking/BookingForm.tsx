@@ -83,18 +83,12 @@ export function BookingForm() {
     setError(null)
     
     try {
-      // Получаем roomTypeId из базы (или используем slug)
-      const roomData = ROOM_TYPES.find(r => r.slug === selectedRoom)
-      if (!roomData) {
-        throw new Error('Тип номера не найден')
-      }
-
-      // 1. Создаём бронирование
+      // 1. Создаём бронирование (используем slug как roomTypeId)
       const bookingRes = await fetch('/api/booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          roomTypeId: roomData.id || selectedRoom, // Используем slug как fallback
+          roomTypeId: selectedRoom, // Передаём slug, API принимает и ID, и slug
           checkIn: checkIn.toISOString(),
           checkOut: checkOut.toISOString(),
           guestName: data.guestName,

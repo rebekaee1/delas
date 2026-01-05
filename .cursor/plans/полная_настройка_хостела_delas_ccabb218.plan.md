@@ -23,7 +23,7 @@ todos:
       - step1-prisma-schema
   - id: step2-yukassa
     content: Зарегистрироваться в ЮKassa и получить тестовые ключи
-    status: pending
+    status: completed
   - id: step3-payment-create
     content: Реализовать /api/payment/create с receipt (54-ФЗ)
     status: completed
