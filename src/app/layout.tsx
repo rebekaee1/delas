@@ -25,8 +25,11 @@ const golosText = Golos_Text({
 })
 
 // SEO метаданные согласно BUSINESS_INFO.md
+// Используем .trim() для защиты от пробелов в переменных окружения TimeWeb
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://hostel-delas.ru').trim()
+
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://hostel-delas.ru'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Хостел DELAS в Сочи — койко-место от 600₽ | Центр города',
     template: '%s | Хостел DELAS Сочи',
