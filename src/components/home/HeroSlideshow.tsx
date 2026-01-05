@@ -48,9 +48,8 @@ export function HeroSlideshow({ images, intervalMs = 4000 }: HeroSlideshowProps)
         />
       ))}
 
-      {/* Градиент для читаемости текста — усиленное затемнение */}
-      <div className="absolute inset-0 bg-gradient-to-br from-coal/90 via-coal/55 to-coal/25" />
-      <div className="absolute inset-0 bg-gradient-to-t from-coal/50 via-transparent to-coal/30" />
+      {/* Градиент для читаемости текста — затемнение снизу-слева где текст */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-coal/85 via-coal/40 to-transparent" />
     </div>
   )
 }
