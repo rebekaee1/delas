@@ -10,6 +10,15 @@ import { notifyCorporateRequest } from '@/lib/telegram'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    
+    // Honeypot check - если поле заполнено, это бот
+    if (body.website) {
+      return NextResponse.json(
+        { success: false, error: 'Ошибка валидации' },
+        { status: 400 }
+      )
+    }
+    
     const validation = corporateRequestSchema.safeParse(body)
 
     if (!validation.success) {

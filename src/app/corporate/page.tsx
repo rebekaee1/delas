@@ -215,6 +215,16 @@ export default function CorporatePage() {
                       className="w-full px-3 py-2 text-body rounded-md border border-sand-200 bg-sand focus:outline-none focus:ring-2 focus:ring-terracotta"
                     />
                   </div>
+
+                  {/* Honeypot - скрытое поле против ботов */}
+                  <input
+                    type="text"
+                    name="website"
+                    autoComplete="off"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
+                  />
                   
                   <Button 
                     type="submit" 

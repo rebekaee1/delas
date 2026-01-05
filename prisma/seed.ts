@@ -75,7 +75,7 @@ async function main() {
       slug: 'zhenskiy-komfort-plus',
       description: 'Только для женщин. Максимальная приватность, всего 4 места в номере. Все удобства номера Комфорт.',
       beds: 4,
-      pricePerNight: 1000,
+      pricePerNight: 800,
       amenities: ['Wi-Fi', 'Постельное бельё', 'Личная розетка', 'USB-зарядка', 'Светильник', 'Доступ на кухню', 'Душ', 'Только для женщин'],
       images: [],
       maxGuests: 4,

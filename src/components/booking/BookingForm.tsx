@@ -360,6 +360,22 @@ export function BookingForm() {
                 />
               </div>
 
+              {/* Honeypot - скрытое поле против ботов */}
+              <input
+                type="text"
+                name="website"
+                autoComplete="off"
+                tabIndex={-1}
+                aria-hidden="true"
+                className="absolute -left-[9999px] opacity-0 pointer-events-none"
+                onChange={(e) => {
+                  if (e.target.value) {
+                    // Бот заполнил скрытое поле
+                    setError('Ошибка валидации формы')
+                  }
+                }}
+              />
+
               {/* Согласие на обработку персональных данных */}
               <div className="space-y-2 pt-2">
                 <label className="flex items-start gap-3 cursor-pointer">

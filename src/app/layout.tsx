@@ -3,6 +3,7 @@ import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
 import { Header, Footer } from '@/components/layout'
 import { CookieConsent } from '@/components/layout/CookieConsent'
+import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
@@ -102,9 +103,9 @@ export default function RootLayout({
     <html lang="ru" className={`${unbounded.variable} ${golosText.variable}`}>
       <head>
         <meta name="theme-color" content="#C4704A" />
-        {/* Яндекс.Метрика и другие скрипты добавить позже */}
       </head>
       <body className="min-h-screen bg-sand font-body antialiased flex flex-col">
+        <YandexMetrika />
         <Header />
         <main className="flex-1">
           {children}

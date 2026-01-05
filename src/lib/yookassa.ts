@@ -218,6 +218,88 @@ function formatPhoneForReceipt(phone: string): string {
 }
 
 /**
+ * Создать возврат платежа
+ * @param paymentId - ID платежа в ЮKassa
+ * @param amount - Сумма возврата (если не указана - полный возврат)
+ * @param description - Описание причины возврата
+ */
+export async function createRefund(params: {
+  paymentId: string
+  amount?: number
+  description?: string
+  receiptDescription?: string
+  customerEmail?: string
+  customerPhone?: string
+}): Promise<{
+  refundId: string
+  status: string
+  amount: string
+}> {
+  const config = getConfig()
+
+  // Получаем информацию о платеже для определения суммы
+  const payment = await getPayment(params.paymentId)
+  
+  const refundAmount = params.amount 
+    ? params.amount.toFixed(2) 
+    : payment.amount.value
+
+  const refundData: Record<string, unknown> = {
+    payment_id: params.paymentId,
+    amount: {
+      value: refundAmount,
+      currency: 'RUB',
+    },
+    description: params.description || 'Возврат средств за отменённое бронирование',
+  }
+
+  // Добавляем чек возврата для 54-ФЗ если есть данные клиента
+  if (params.customerEmail || params.customerPhone) {
+    refundData.receipt = {
+      customer: {
+        email: params.customerEmail,
+        phone: params.customerPhone ? formatPhoneForReceipt(params.customerPhone) : undefined,
+      },
+      items: [{
+        description: params.receiptDescription || 'Возврат за проживание',
+        quantity: '1.00',
+        amount: {
+          value: refundAmount,
+          currency: 'RUB',
+        },
+        vat_code: 1,
+        payment_subject: 'service',
+        payment_mode: 'full_prepayment',
+      }],
+    }
+  }
+
+  const response = await fetch(`${YOOKASSA_API_URL}/refunds`, {
+    method: 'POST',
+    headers: {
+      'Authorization': createAuthHeader(config),
+      'Content-Type': 'application/json',
+      'Idempotence-Key': generateIdempotenceKey(),
+    },
+    body: JSON.stringify(refundData),
+  })
+
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}))
+    console.error('YooKassa Refund Error:', response.status, errorData)
+    throw new Error(`Ошибка возврата: ${response.status}`)
+  }
+
+  const refund = await response.json()
+
+  return {
+    refundId: refund.id,
+    status: refund.status,
+    amount: refund.amount.value,
+  }
+}
+
+/**
  * Типы событий webhook
  */
 export type WebhookEventType = 

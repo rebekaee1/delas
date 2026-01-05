@@ -11,6 +11,15 @@ import { notifyNewBooking } from '@/lib/telegram'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
+    
+    // Honeypot check - если поле заполнено, это бот
+    if (body.website) {
+      return NextResponse.json(
+        { success: false, error: 'Ошибка валидации' },
+        { status: 400 }
+      )
+    }
+    
     const validation = createBookingSchema.safeParse(body)
 
     if (!validation.success) {
@@ -62,8 +71,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Проверяем доступность (используем реальный ID из базы)
-    const overlappingBookings = await prisma.booking.count({
+    // Проверяем доступность мест (считаем гостей, а не бронирования)
+    // Общее количество койко-мест = кроватей в номере * количество номеров
+    const totalBeds = roomType.beds * roomType.totalUnits
+    
+    // Считаем сколько гостей уже забронировано на эти даты
+    const bookedGuests = await prisma.booking.aggregate({
       where: {
         roomTypeId: roomType.id,
         status: { in: ['PENDING', 'CONFIRMED', 'CHECKED_IN'] },
@@ -73,11 +86,20 @@ export async function POST(request: NextRequest) {
           { checkIn: { lte: checkIn }, checkOut: { gte: checkOut } },
         ],
       },
+      _sum: { guestsCount: true },
     })
 
-    if (overlappingBookings >= roomType.totalUnits) {
+    const occupiedBeds = bookedGuests._sum.guestsCount || 0
+    const availableBeds = totalBeds - occupiedBeds
+
+    if (guestsCount > availableBeds) {
       return NextResponse.json(
-        { success: false, error: 'Нет свободных мест на выбранные даты' },
+        { 
+          success: false, 
+          error: availableBeds > 0 
+            ? `Доступно только ${availableBeds} мест на выбранные даты`
+            : 'Нет свободных мест на выбранные даты'
+        },
         { status: 409 }
       )
     }

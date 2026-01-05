@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { notifyPaymentSuccess } from '@/lib/telegram'
+import { sendBookingConfirmation } from '@/lib/email'
 import { WebhookEvent } from '@/lib/yookassa'
 
 /**
@@ -101,6 +102,7 @@ async function handlePaymentSucceeded(
     checkIn: Date
     checkOut: Date
     nights: number
+    guestsCount: number
     roomType: { name: string }
   },
   payment: { id: string; amount: { value: string } }
@@ -129,8 +131,18 @@ async function handlePaymentSucceeded(
     totalPrice: booking.totalPrice,
   })
 
-  // TODO: Отправить email подтверждение гостю
-  // await sendConfirmationEmail(booking)
+  // Отправляем email подтверждение гостю
+  sendBookingConfirmation({
+    id: booking.id,
+    guestName: booking.guestName,
+    guestEmail: booking.guestEmail,
+    roomTypeName: booking.roomType.name,
+    checkIn: booking.checkIn,
+    checkOut: booking.checkOut,
+    nights: booking.nights,
+    totalPrice: booking.totalPrice,
+    guestsCount: booking.guestsCount,
+  }).catch(err => console.error('Failed to send confirmation email:', err))
 }
 
 /**

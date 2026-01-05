@@ -55,8 +55,11 @@ export async function POST(request: NextRequest) {
       })
     }
 
-    // Считаем количество бронирований на эти даты (используем реальный ID)
-    const overlappingBookings = await prisma.booking.count({
+    // Общее количество койко-мест = кроватей в номере * количество номеров
+    const totalBeds = roomType.beds * roomType.totalUnits
+    
+    // Считаем сколько гостей уже забронировано на эти даты
+    const bookedGuests = await prisma.booking.aggregate({
       where: {
         roomTypeId: roomType.id,
         status: { in: ['PENDING', 'CONFIRMED', 'CHECKED_IN'] },
@@ -69,7 +72,11 @@ export async function POST(request: NextRequest) {
           { checkIn: { lte: checkIn }, checkOut: { gte: checkOut } },
         ],
       },
+      _sum: { guestsCount: true },
     })
+
+    const occupiedBeds = bookedGuests._sum.guestsCount || 0
+    const availableBeds = totalBeds - occupiedBeds
 
     // Проверяем заблокированные даты (используем реальный ID)
     const blockedDates = await prisma.blockedDate.count({
@@ -81,8 +88,6 @@ export async function POST(request: NextRequest) {
         date: { gte: checkIn, lt: checkOut },
       },
     })
-
-    const availableUnits = roomType.totalUnits - overlappingBookings
 
     // Рассчитываем цену
     const nights = calculateNights(checkIn, checkOut)
@@ -103,8 +108,9 @@ export async function POST(request: NextRequest) {
       data: {
         roomTypeId,
         roomTypeName: roomType.name,
-        available: availableUnits > 0 && blockedDates === 0,
-        availableUnits: Math.max(0, availableUnits),
+        available: availableBeds >= guests && blockedDates === 0,
+        availableBeds: Math.max(0, availableBeds),
+        totalBeds,
         blockedDates: blockedDates > 0,
         pricePerNight: roomType.pricePerNight,
         nights,

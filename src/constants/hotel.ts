@@ -119,15 +119,15 @@ export const HOTEL = {
 } as const
 
 /**
- * Типы номеров (заглушки, реальные данные из БД)
- * UPDATE ТОЧКА 5: Обновить реальными ценами после получения от владельца
+ * Типы номеров
+ * Цены актуальны на январь 2026
  */
 export const ROOM_TYPES = [
   {
     slug: 'standart',
     name: 'Стандарт',
-    beds: 10, // TODO: уточнить
-    pricePerNight: 600, // TODO: уточнить
+    beds: 10,
+    pricePerNight: 600,
     description: 'Койко-место в стандартной комнате',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Доступ на кухню'],
     isWomenOnly: false,
@@ -137,35 +137,35 @@ export const ROOM_TYPES = [
   {
     slug: 'komfort',
     name: 'Комфорт',
-    beds: 8, // TODO: уточнить
-    pricePerNight: 800, // TODO: уточнить
+    beds: 8,
+    pricePerNight: 800,
     description: 'Улучшенный люкс номер с индивидуальной розеткой, USB-зарядкой и светильником',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
     image4x3: '/images/comfort_4x3.webp',
-    image16x9: '/images/comfort_4x3.webp', // Используем 4x3 как fallback
+    image16x9: '/images/comfort_4x3.webp',
   },
   {
     slug: 'komfort-plus',
     name: 'Комфорт+',
-    beds: 6, // TODO: уточнить
-    pricePerNight: 900, // TODO: уточнить
+    beds: 6,
+    pricePerNight: 900,
     description: 'Повышенный комфорт, меньше людей в номере',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
     image4x3: '/images/comfort+_4x3.webp',
-    image16x9: '/images/comfort+_4x3.webp', // Используем 4x3 как fallback
+    image16x9: '/images/comfort+_4x3.webp',
   },
   {
     slug: 'zhenskiy-komfort-plus',
     name: 'Женский Комфорт+',
-    beds: 4, // TODO: уточнить
-    pricePerNight: 1000, // TODO: уточнить
+    beds: 4,
+    pricePerNight: 800,
     description: 'Только для женщин, максимальная приватность',
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: true,
     image4x3: '/images/women_4x3.webp',
-    image16x9: '/images/women_4x3.webp', // Используем 4x3 как fallback
+    image16x9: '/images/women_4x3.webp',
   },
 ] as const
 

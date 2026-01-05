@@ -1,10 +1,32 @@
 /**
- * Отправка email уведомлений
- * Использует Resend API или SMTP
+ * Отправка email уведомлений через SMTP (TimeWeb Cloud)
+ * Настройки SMTP:
+ * - Host: smtp.timeweb.ru
+ * - Port: 465 (SSL)
+ * - User: info@hostel-delas.ru
  */
 
-const RESEND_API_KEY = process.env.RESEND_API_KEY
-const FROM_EMAIL = process.env.FROM_EMAIL || 'noreply@delas-sochi.ru'
+import nodemailer from 'nodemailer'
+import { HOTEL } from '@/constants/hotel'
+
+// Конфигурация SMTP
+const SMTP_HOST = process.env.SMTP_HOST || 'smtp.timeweb.ru'
+const SMTP_PORT = Number(process.env.SMTP_PORT) || 465
+const SMTP_USER = process.env.SMTP_USER || 'info@hostel-delas.ru'
+const SMTP_PASSWORD = process.env.SMTP_PASSWORD
+
+// Создаём транспорт для отправки
+const transporter = SMTP_PASSWORD
+  ? nodemailer.createTransport({
+      host: SMTP_HOST,
+      port: SMTP_PORT,
+      secure: true, // SSL
+      auth: {
+        user: SMTP_USER,
+        pass: SMTP_PASSWORD,
+      },
+    })
+  : null
 
 interface EmailOptions {
   to: string
@@ -14,39 +36,26 @@ interface EmailOptions {
 }
 
 /**
- * Отправка email через Resend API
+ * Отправка email
  */
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
-  if (!RESEND_API_KEY) {
-    console.warn('Email credentials not configured')
+  if (!transporter) {
+    console.warn('Email SMTP не настроен. Установите SMTP_PASSWORD в .env')
     return false
   }
 
   try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: `Хостел DELAS <${FROM_EMAIL}>`,
-        to: [options.to],
-        subject: options.subject,
-        html: options.html,
-        text: options.text,
-      }),
+    await transporter.sendMail({
+      from: `"Хостел DELAS" <${SMTP_USER}>`,
+      to: options.to,
+      subject: options.subject,
+      html: options.html,
+      text: options.text,
     })
-
-    if (!response.ok) {
-      const error = await response.json()
-      console.error('Resend API error:', error)
-      return false
-    }
-
+    console.log(`Email отправлен: ${options.to}`)
     return true
   } catch (error) {
-    console.error('Error sending email:', error)
+    console.error('Ошибка отправки email:', error)
     return false
   }
 }
@@ -76,87 +85,141 @@ export async function sendBookingConfirmation(booking: {
     year: 'numeric',
   })
 
+  const cancelUrl = `https://${HOTEL.domain}/booking/cancel?id=${booking.id}`
+  const whatsappUrl = `https://wa.me/${HOTEL.contacts.whatsapp.replace(/\D/g, '')}`
+
   const html = `
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #2D2A26; }
-    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #C4704A; color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-    .content { background: #F5F0E8; padding: 30px; border-radius: 0 0 8px 8px; }
-    .info-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #E8E2DA; }
-    .label { color: #6B6560; }
-    .value { font-weight: 600; }
-    .total { font-size: 24px; color: #C4704A; font-weight: bold; }
-    .footer { text-align: center; padding: 20px; color: #6B6560; font-size: 14px; }
-    .button { display: inline-block; background: #C4704A; color: white; padding: 15px 30px; text-decoration: none; border-radius: 8px; margin-top: 20px; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #2D2A26; margin: 0; padding: 0; background: #F5F0E8; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .header { background: linear-gradient(135deg, #C4704A 0%, #A85A3A 100%); color: white; padding: 40px 30px; text-align: center; }
+    .header h1 { margin: 0; font-size: 28px; font-weight: 600; }
+    .header p { margin: 10px 0 0; opacity: 0.9; font-size: 16px; }
+    .content { background: white; padding: 30px; }
+    .greeting { font-size: 18px; margin-bottom: 20px; }
+    .info-card { background: #F5F0E8; border-radius: 12px; padding: 24px; margin: 20px 0; }
+    .info-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid #E8E2DA; }
+    .info-row:last-child { border-bottom: none; }
+    .label { color: #6B6560; font-size: 14px; }
+    .value { font-weight: 600; color: #2D2A26; }
+    .total-row { background: #C4704A; color: white; border-radius: 8px; padding: 16px 20px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center; }
+    .total-label { font-size: 16px; }
+    .total-value { font-size: 24px; font-weight: 700; }
+    .section-title { color: #C4704A; font-size: 18px; font-weight: 600; margin: 30px 0 15px; border-bottom: 2px solid #C4704A; padding-bottom: 8px; }
+    .address-block { background: #F5F0E8; padding: 20px; border-radius: 12px; margin: 15px 0; }
+    .checklist { list-style: none; padding: 0; margin: 0; }
+    .checklist li { padding: 8px 0; padding-left: 28px; position: relative; }
+    .checklist li::before { content: "✓"; position: absolute; left: 0; color: #4CAF50; font-weight: bold; }
+    .button { display: inline-block; background: #C4704A; color: white !important; padding: 14px 28px; text-decoration: none; border-radius: 8px; font-weight: 600; margin: 10px 5px 10px 0; }
+    .button-outline { background: transparent; border: 2px solid #C4704A; color: #C4704A !important; }
+    .contacts { background: #F5F0E8; padding: 20px; border-radius: 12px; margin: 20px 0; }
+    .contacts a { color: #C4704A; text-decoration: none; }
+    .footer { text-align: center; padding: 30px; color: #6B6560; font-size: 14px; }
+    .footer a { color: #C4704A; }
+    .divider { height: 1px; background: #E8E2DA; margin: 30px 0; }
+    @media (max-width: 600px) {
+      .content { padding: 20px; }
+      .info-row { flex-direction: column; gap: 4px; }
+      .button { display: block; text-align: center; margin: 10px 0; }
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1 style="margin: 0; font-size: 28px;">✓ Бронирование подтверждено</h1>
-      <p style="margin: 10px 0 0; opacity: 0.9;">Номер бронирования: ${booking.id}</p>
+      <h1>✓ Бронирование подтверждено</h1>
+      <p>Номер брони: ${booking.id}</p>
     </div>
     
     <div class="content">
-      <p>Здравствуйте, ${booking.guestName}!</p>
-      <p>Ваше бронирование в хостеле DELAS успешно подтверждено.</p>
+      <p class="greeting">Здравствуйте, ${booking.guestName}!</p>
+      <p>Ваше бронирование в хостеле <strong>DELAS</strong> успешно подтверждено и оплачено.</p>
       
-      <h3 style="color: #C4704A; margin-top: 30px;">Детали бронирования</h3>
-      
-      <div class="info-row">
-        <span class="label">Номер:</span>
-        <span class="value">${booking.roomTypeName}</span>
+      <div class="info-card">
+        <div class="info-row">
+          <span class="label">Номер</span>
+          <span class="value">${booking.roomTypeName}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Дата заезда</span>
+          <span class="value">${checkInStr}, с 14:00</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Дата выезда</span>
+          <span class="value">${checkOutStr}, до 12:00</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Ночей</span>
+          <span class="value">${booking.nights}</span>
+        </div>
+        <div class="info-row">
+          <span class="label">Гостей</span>
+          <span class="value">${booking.guestsCount}</span>
+        </div>
       </div>
       
-      <div class="info-row">
-        <span class="label">Дата заезда:</span>
-        <span class="value">${checkInStr}, с 14:00</span>
+      <div class="total-row">
+        <span class="total-label">Оплачено</span>
+        <span class="total-value">${booking.totalPrice.toLocaleString('ru-RU')} ₽</span>
       </div>
       
-      <div class="info-row">
-        <span class="label">Дата выезда:</span>
-        <span class="value">${checkOutStr}, до 12:00</span>
+      <h3 class="section-title">📍 Адрес</h3>
+      <div class="address-block">
+        <strong>${HOTEL.address.full}</strong>
+        <p style="margin: 10px 0 0; color: #6B6560; font-size: 14px;">
+          ${HOTEL.distances.sea} до моря · ${HOTEL.distances.trainStation} до ж/д вокзала
+        </p>
       </div>
       
-      <div class="info-row">
-        <span class="label">Ночей:</span>
-        <span class="value">${booking.nights}</span>
-      </div>
-      
-      <div class="info-row">
-        <span class="label">Гостей:</span>
-        <span class="value">${booking.guestsCount}</span>
-      </div>
-      
-      <div class="info-row" style="border: none; padding-top: 20px;">
-        <span class="label" style="font-size: 18px;">Оплачено:</span>
-        <span class="total">${booking.totalPrice.toLocaleString('ru-RU')}₽</span>
-      </div>
-      
-      <h3 style="color: #C4704A; margin-top: 30px;">Адрес</h3>
-      <p>г. Сочи, ул. Гагарина, 53а</p>
-      
-      <h3 style="color: #C4704A; margin-top: 30px;">Что взять с собой</h3>
-      <ul>
+      <h3 class="section-title">📋 Что взять с собой</h3>
+      <ul class="checklist">
         <li>Паспорт или другой документ, удостоверяющий личность</li>
         <li>Тапочки (по желанию)</li>
-        <li>Полотенце (по желанию)</li>
+        <li>Средства личной гигиены</li>
       </ul>
+      <p style="color: #6B6560; font-size: 14px; margin-top: 10px;">
+        Постельное бельё и полотенце выдаём при заселении
+      </p>
       
-      <p style="margin-top: 30px;">Если у вас есть вопросы — звоните или пишите:</p>
-      <p>📞 +7 (XXX) XXX-XX-XX</p>
-      <p>✉️ info@delas-sochi.ru</p>
+      <div class="divider"></div>
       
-      <p style="margin-top: 30px;">Ждём вас!</p>
+      <h3 class="section-title">📞 Контакты</h3>
+      <div class="contacts">
+        <p style="margin: 0 0 10px;">
+          <strong>Телефон:</strong> <a href="tel:${HOTEL.contacts.phoneRaw}">${HOTEL.contacts.phone}</a>
+        </p>
+        <p style="margin: 0 0 10px;">
+          <strong>WhatsApp:</strong> <a href="${whatsappUrl}">${HOTEL.contacts.whatsapp}</a>
+        </p>
+        <p style="margin: 0;">
+          <strong>Email:</strong> <a href="mailto:${HOTEL.contacts.email}">${HOTEL.contacts.email}</a>
+        </p>
+      </div>
+      
+      <p style="margin-top: 30px;">
+        <a href="${whatsappUrl}" class="button">Написать в WhatsApp</a>
+        <a href="${cancelUrl}" class="button button-outline">Отменить бронь</a>
+      </p>
+      
+      <p style="margin-top: 30px; color: #6B6560; font-size: 14px;">
+        Если у вас есть вопросы — звоните или пишите, мы всегда на связи!
+      </p>
     </div>
     
     <div class="footer">
-      <p>Хостел DELAS, г. Сочи</p>
-      <p>Это письмо отправлено автоматически, отвечать на него не нужно.</p>
+      <p><strong>Хостел DELAS</strong></p>
+      <p>${HOTEL.address.full}</p>
+      <p>
+        <a href="https://${HOTEL.domain}">hostel-delas.ru</a>
+      </p>
+      <p style="margin-top: 20px; font-size: 12px; color: #999;">
+        Это письмо отправлено автоматически. Отвечать на него не нужно.
+      </p>
     </div>
   </div>
 </body>
@@ -179,18 +242,35 @@ export async function sendBookingConfirmation(booking: {
 Дата выезда: ${checkOutStr}, до 12:00
 Ночей: ${booking.nights}
 Гостей: ${booking.guestsCount}
-Оплачено: ${booking.totalPrice}₽
+Оплачено: ${booking.totalPrice.toLocaleString('ru-RU')}₽
 
 АДРЕС
 -----
-г. Сочи, ул. Гагарина, 53а
+${HOTEL.address.full}
+${HOTEL.distances.sea} до моря
 
-Если у вас есть вопросы — звоните: +7 (XXX) XXX-XX-XX
+ЧТО ВЗЯТЬ С СОБОЙ
+-----------------
+• Паспорт
+• Тапочки (по желанию)
+• Средства личной гигиены
+
+Постельное бельё и полотенце выдаём при заселении.
+
+КОНТАКТЫ
+--------
+Телефон: ${HOTEL.contacts.phone}
+WhatsApp: ${HOTEL.contacts.whatsapp}
+Email: ${HOTEL.contacts.email}
+
+Если нужно отменить бронь: ${cancelUrl}
 
 Ждём вас!
 
 --
-Хостел DELAS, г. Сочи
+Хостел DELAS
+${HOTEL.address.full}
+https://${HOTEL.domain}
   `.trim()
 
   return sendEmail({
@@ -201,5 +281,72 @@ export async function sendBookingConfirmation(booking: {
   })
 }
 
+/**
+ * Email уведомление об отмене бронирования
+ */
+export async function sendBookingCancellation(booking: {
+  guestEmail: string
+  guestName: string
+  id: string
+  roomTypeName: string
+  refundAmount: number
+}): Promise<boolean> {
+  const html = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #2D2A26; margin: 0; padding: 0; background: #F5F0E8; }
+    .container { max-width: 600px; margin: 0 auto; }
+    .header { background: #6B6560; color: white; padding: 40px 30px; text-align: center; }
+    .content { background: white; padding: 30px; }
+    .refund-box { background: #E8F5E9; border: 1px solid #4CAF50; border-radius: 12px; padding: 20px; margin: 20px 0; text-align: center; }
+    .refund-amount { font-size: 28px; font-weight: 700; color: #4CAF50; }
+    .footer { text-align: center; padding: 30px; color: #6B6560; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Бронирование отменено</h1>
+      <p>Номер брони: ${booking.id}</p>
+    </div>
+    
+    <div class="content">
+      <p>Здравствуйте, ${booking.guestName}!</p>
+      <p>Ваше бронирование <strong>${booking.roomTypeName}</strong> успешно отменено.</p>
+      
+      ${booking.refundAmount > 0 ? `
+      <div class="refund-box">
+        <p style="margin: 0 0 10px; color: #6B6560;">Сумма возврата:</p>
+        <p class="refund-amount">${booking.refundAmount.toLocaleString('ru-RU')} ₽</p>
+        <p style="margin: 10px 0 0; font-size: 14px; color: #6B6560;">
+          Средства поступят на карту в течение 3-5 рабочих дней
+        </p>
+      </div>
+      ` : ''}
+      
+      <p>Будем рады видеть вас в следующий раз!</p>
+      
+      <p style="margin-top: 30px;">
+        С уважением,<br>
+        Команда хостела DELAS
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p><strong>Хостел DELAS</strong></p>
+      <p>${HOTEL.address.full}</p>
+    </div>
+  </div>
+</body>
+</html>
+  `.trim()
 
-
+  return sendEmail({
+    to: booking.guestEmail,
+    subject: `Бронирование отменено — ${booking.roomTypeName}`,
+    html,
+  })
+}
