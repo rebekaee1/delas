@@ -1,0 +1,338 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "Хостел DELAS" [ref=e4] [cursor=pointer]:
+        - /url: /
+        - img "Хостел DELAS" [ref=e5]
+      - button "Открыть меню" [ref=e6] [cursor=pointer]:
+        - img
+        - generic [ref=e7]: Открыть меню
+  - main [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e10]:
+        - img "Ресепшен хостела DELAS" [ref=e11]
+        - img "Номер Стандарт" [ref=e12]
+        - img "Пространство для команд" [ref=e13]
+        - img "Кухня и обеденная зона" [ref=e14]
+        - img "Зона отдыха с кинотеатром" [ref=e15]
+      - generic [ref=e18]:
+        - heading "Койко-место от 600₽ в центре Сочи" [level=1] [ref=e19]
+        - paragraph [ref=e20]: ул. Гагарина 53а • Рядом с морем • Круглосуточно
+        - link "Проверить свободные места" [ref=e21] [cursor=pointer]:
+          - /url: /rooms
+    - generic [ref=e23]:
+      - heading "Что включено" [level=2] [ref=e24]
+      - generic [ref=e25]:
+        - generic [ref=e26]:
+          - generic [ref=e27]: 🍳
+          - generic [ref=e28]: Кухня
+        - generic [ref=e29]:
+          - generic [ref=e30]: 📶
+          - generic [ref=e31]: Wi-Fi
+        - generic [ref=e32]:
+          - generic [ref=e33]: 🛏️
+          - generic [ref=e34]: Постельное бельё
+        - generic [ref=e35]:
+          - generic [ref=e36]: 🛁
+          - generic [ref=e37]: Полотенце
+        - generic [ref=e38]:
+          - generic [ref=e39]: ❄️
+          - generic [ref=e40]: Холодильник
+        - generic [ref=e41]:
+          - generic [ref=e42]: 📺
+          - generic [ref=e43]: Зона отдыха
+    - generic [ref=e45]:
+      - heading "Наши номера" [level=2] [ref=e46]
+      - paragraph [ref=e47]: Выберите подходящий вариант размещения
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - link "Стандарт" [ref=e50] [cursor=pointer]:
+            - /url: /rooms/standart
+            - img "Стандарт" [ref=e51]
+          - link "Стандарт" [ref=e53] [cursor=pointer]:
+            - /url: /rooms/standart
+            - heading "Стандарт" [level=3] [ref=e54]
+          - paragraph [ref=e55]: 10 мест
+          - generic [ref=e56]:
+            - generic [ref=e58]: от 600₽
+            - generic [ref=e59]:
+              - link "Забронировать" [ref=e60] [cursor=pointer]:
+                - /url: /booking?room=standart
+              - link "Подробнее" [ref=e61] [cursor=pointer]:
+                - /url: /rooms/standart
+        - generic [ref=e62]:
+          - link "Комфорт" [ref=e63] [cursor=pointer]:
+            - /url: /rooms/komfort
+            - img "Комфорт" [ref=e64]
+          - link "Комфорт" [ref=e66] [cursor=pointer]:
+            - /url: /rooms/komfort
+            - heading "Комфорт" [level=3] [ref=e67]
+          - paragraph [ref=e68]: 8 мест
+          - generic [ref=e69]:
+            - generic [ref=e71]: от 800₽
+            - generic [ref=e72]:
+              - link "Забронировать" [ref=e73] [cursor=pointer]:
+                - /url: /booking?room=komfort
+              - link "Подробнее" [ref=e74] [cursor=pointer]:
+                - /url: /rooms/komfort
+        - generic [ref=e75]:
+          - link "Комфорт+" [ref=e76] [cursor=pointer]:
+            - /url: /rooms/komfort-plus
+            - img "Комфорт+" [ref=e77]
+          - link "Комфорт+" [ref=e79] [cursor=pointer]:
+            - /url: /rooms/komfort-plus
+            - heading "Комфорт+" [level=3] [ref=e80]
+          - paragraph [ref=e81]: 6 мест
+          - generic [ref=e82]:
+            - generic [ref=e84]: от 900₽
+            - generic [ref=e85]:
+              - link "Забронировать" [ref=e86] [cursor=pointer]:
+                - /url: /booking?room=komfort-plus
+              - link "Подробнее" [ref=e87] [cursor=pointer]:
+                - /url: /rooms/komfort-plus
+        - generic [ref=e88]:
+          - link "Женский Комфорт+" [ref=e89] [cursor=pointer]:
+            - /url: /rooms/zhenskiy-komfort-plus
+            - img "Женский Комфорт+" [ref=e90]
+          - generic [ref=e92]: Только для женщин
+          - link "Женский Комфорт+" [ref=e93] [cursor=pointer]:
+            - /url: /rooms/zhenskiy-komfort-plus
+            - heading "Женский Комфорт+" [level=3] [ref=e94]
+          - paragraph [ref=e95]: 4 мест
+          - generic [ref=e96]:
+            - generic [ref=e98]: от 800₽
+            - generic [ref=e99]:
+              - link "Забронировать" [ref=e100] [cursor=pointer]:
+                - /url: /booking?room=zhenskiy-komfort-plus
+              - link "Подробнее" [ref=e101] [cursor=pointer]:
+                - /url: /rooms/zhenskiy-komfort-plus
+    - generic [ref=e103]:
+      - heading "Скидки при длительном проживании" [level=2] [ref=e104]
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - generic [ref=e107]: 5%
+          - paragraph [ref=e108]: от 7 дней
+        - generic [ref=e109]:
+          - generic [ref=e110]: 10%
+          - paragraph [ref=e111]: от 30 дней
+    - generic [ref=e113]:
+      - heading "Отзывы гостей" [level=2] [ref=e114]
+      - paragraph [ref=e115]: Нас рекомендуют на Яндекс.Картах
+      - generic [ref=e116]:
+        - generic [ref=e117]:
+          - generic [ref=e118]:
+            - generic [ref=e119]: ⭐
+            - generic [ref=e120]: ⭐
+            - generic [ref=e121]: ⭐
+            - generic [ref=e122]: ⭐
+            - generic [ref=e123]: ⭐
+          - paragraph [ref=e124]: «Отличное место для проживания! Чисто, уютно, персонал приветливый. Рядом всё необходимое. Рекомендую!»
+          - paragraph [ref=e125]: — Гость, Яндекс.Карты
+        - generic [ref=e126]:
+          - generic [ref=e127]:
+            - generic [ref=e128]: ⭐
+            - generic [ref=e129]: ⭐
+            - generic [ref=e130]: ⭐
+            - generic [ref=e131]: ⭐
+            - generic [ref=e132]: ⭐
+          - paragraph [ref=e133]: «Хороший хостел за свои деньги. Кухня работает круглосуточно, Wi-Fi быстрый. До моря недалеко.»
+          - paragraph [ref=e134]: — Гость, Яндекс.Карты
+        - generic [ref=e135]:
+          - generic [ref=e136]:
+            - generic [ref=e137]: ⭐
+            - generic [ref=e138]: ⭐
+            - generic [ref=e139]: ⭐
+            - generic [ref=e140]: ⭐
+            - generic [ref=e141]: ⭐
+          - paragraph [ref=e142]: «Удобное расположение, всё рядом. Номера чистые, есть всё необходимое. Приеду ещё!»
+          - paragraph [ref=e143]: — Гость, Яндекс.Карты
+      - link "⭐ Смотреть отзывы на Яндекс.Картах →" [ref=e145] [cursor=pointer]:
+        - /url: https://yandex.ru/maps/239/sochi/?ll=39.724692%2C43.60692&mode=poi&poi%5Bpoint%5D=39.724692%2C43.60692&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D125392534870&z=17
+        - generic [ref=e146]: ⭐
+        - generic [ref=e147]: Смотреть отзывы на Яндекс.Картах
+        - generic [ref=e148]: →
+    - generic [ref=e151]:
+      - heading "Для организаций" [level=2] [ref=e152]
+      - paragraph [ref=e153]: Размещение бригад, безналичный расчёт, закрывающие документы. Индивидуальные условия для корпоративных клиентов.
+      - link "Оставить заявку" [ref=e154] [cursor=pointer]:
+        - /url: /corporate
+    - generic [ref=e156]:
+      - heading "Где мы находимся" [level=2] [ref=e157]
+      - generic [ref=e158]:
+        - iframe [ref=e161]:
+          - generic [active] [ref=f1e1]:
+            - link "Delas" [ref=f1e2] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/org/delas/125392534870/
+            - link "Хостел" [ref=f1e3] [cursor=pointer]:
+              - /url: https://yandex.ru/maps/239/sochi/category/hostel/20699506347/
+            - generic [ref=f1e4]:
+              - generic:
+                - generic:
+                  - generic [ref=f1e8]:
+                    - generic:
+                      - generic:
+                        - generic:
+                          - generic:
+                            - generic [ref=f1e9] [cursor=pointer]:
+                              - generic:
+                                - generic:
+                                  - generic:
+                                    - img
+                                  - generic:
+                                    - generic:
+                                      - img
+                            - generic [ref=f1e13] [cursor=pointer]: Delas
+                  - generic:
+                    - generic:
+                      - generic:
+                        - generic [ref=f1e14]:
+                          - generic [ref=f1e15]:
+                            - button [ref=f1e18] [cursor=pointer]:
+                              - generic:
+                                - generic:
+                                  - img
+                            - button [ref=f1e20] [cursor=pointer]:
+                              - generic [ref=f1e21]:
+                                - generic:
+                                  - img
+                          - iframe [ref=f1e23]:
+                            
+                        - generic [ref=f1e24]:
+                          - generic [ref=f1e27]:
+                            - button "Приблизить" [ref=f1e29] [cursor=pointer]:
+                              - generic:
+                                - generic:
+                                  - img
+                            - button "Отдалить" [ref=f1e31] [cursor=pointer]:
+                              - generic:
+                                - generic:
+                                  - img
+                          - iframe [ref=f1e32]:
+                            
+                        - generic [ref=f1e33]:
+                          - button "Моё местоположение" [ref=f1e36] [cursor=pointer]:
+                            - generic:
+                              - generic:
+                                - img
+                          - iframe [ref=f1e37]:
+                            
+                        - generic:
+                          - generic:
+                            - generic:
+                              - button "Открыть в Яндекс Картах":
+                                - generic:
+                                  - generic:
+                                    - img
+                                - generic: Открыть в Яндекс Картах
+                          - iframe [ref=f1e38]:
+                            
+                        - generic:
+                          - generic:
+                            - generic:
+                              - button "Открыть в Картах":
+                                - generic:
+                                  - generic:
+                                    - img
+                                - generic: Открыть в Картах
+                          - iframe [ref=f1e39]:
+                            
+                        - generic [ref=f1e40]:
+                          - button [ref=f1e43] [cursor=pointer]:
+                            - generic:
+                              - generic:
+                                - img
+                          - iframe [ref=f1e44]:
+                            
+                      - generic:
+                        - generic:
+                          - contentinfo:
+                            - generic [ref=f1e46]:
+                              - generic [ref=f1e47]: © Яндекс
+                              - link "Условия использования" [ref=f1e48] [cursor=pointer]:
+                                - /url: https://yandex.ru/legal/maps_termsofuse/?lang=ru
+                        - generic:
+                          - generic:
+                            - generic:
+                              - generic: 70 м
+                      - iframe [ref=f1e49]:
+                        
+                  - iframe [ref=f1e50]:
+                    
+            - generic [ref=f1e55]: Delas
+        - generic [ref=e162]:
+          - heading "Хостел DELAS" [level=3] [ref=e163]
+          - generic [ref=e164]:
+            - paragraph [ref=e165]: 📍 г. Сочи, ул. Гагарина, 53а
+            - paragraph [ref=e166]: "🌊 До моря: 15-20 минут пешком"
+            - paragraph [ref=e167]: "🚂 До ж/д вокзала: 10-12 минут пешком"
+            - paragraph [ref=e168]: "🕐 Ресепшен: 24/7"
+            - link "📞 +7 (988) 181-47-77" [ref=e169] [cursor=pointer]:
+              - /url: tel:+79881814777
+            - link "✉️ info@hostel-delas.ru" [ref=e170] [cursor=pointer]:
+              - /url: mailto:info@hostel-delas.ru
+          - generic [ref=e171]:
+            - link "Позвонить" [ref=e172] [cursor=pointer]:
+              - /url: tel:+79881814777
+            - link "WhatsApp" [ref=e173] [cursor=pointer]:
+              - /url: https://wa.me/79881814777
+  - contentinfo [ref=e174]:
+    - generic [ref=e176]:
+      - generic [ref=e177]:
+        - link "Хостел DELAS" [ref=e178] [cursor=pointer]:
+          - /url: /
+          - img "Хостел DELAS" [ref=e179]
+        - paragraph [ref=e180]: Уютный хостел в центре Сочи. Комфортные койко-места от 600₽/ночь. Рядом с морем, кухня 24/7, женские номера.
+        - generic [ref=e181]:
+          - img [ref=e182]
+          - generic [ref=e185]: г. Сочи, ул. Гагарина, 53а
+      - generic [ref=e186]:
+        - heading "Контакты" [level=3] [ref=e187]
+        - list [ref=e188]:
+          - listitem [ref=e189]:
+            - link "+7 (988) 181-47-77" [ref=e190] [cursor=pointer]:
+              - /url: tel:+79881814777
+              - img [ref=e191]
+              - generic [ref=e193]: +7 (988) 181-47-77
+          - listitem [ref=e194]:
+            - link "info@hostel-delas.ru" [ref=e195] [cursor=pointer]:
+              - /url: mailto:info@hostel-delas.ru
+              - img [ref=e196]
+              - generic [ref=e199]: info@hostel-delas.ru
+          - listitem [ref=e200]:
+            - img [ref=e201]
+            - generic [ref=e204]: Круглосуточно
+      - generic [ref=e205]:
+        - heading "Навигация" [level=3] [ref=e206]
+        - list [ref=e207]:
+          - listitem [ref=e208]:
+            - link "Номера" [ref=e209] [cursor=pointer]:
+              - /url: /rooms
+          - listitem [ref=e210]:
+            - link "Для организаций" [ref=e211] [cursor=pointer]:
+              - /url: /corporate
+          - listitem [ref=e212]:
+            - link "Контакты" [ref=e213] [cursor=pointer]:
+              - /url: /contacts
+    - generic [ref=e216]:
+      - paragraph [ref=e217]: © 2026 Хостел DELAS. Все права защищены.
+      - generic [ref=e218]:
+        - link "Политика конфиденциальности" [ref=e219] [cursor=pointer]:
+          - /url: /privacy
+        - link "Оферта" [ref=e220] [cursor=pointer]:
+          - /url: /terms
+  - alert [ref=e221]
+  - generic [ref=e224]:
+    - paragraph [ref=e226]:
+      - text: Мы используем cookies для улучшения работы сайта и анализа посещаемости. Продолжая использовать сайт, вы соглашаетесь с
+      - link "Политикой конфиденциальности" [ref=e227] [cursor=pointer]:
+        - /url: /privacy
+      - text: .
+    - generic [ref=e228]:
+      - button "Отклонить" [ref=e229] [cursor=pointer]
+      - button "Принять" [ref=e230] [cursor=pointer]
+    - button "Закрыть" [ref=e231] [cursor=pointer]:
+      - img [ref=e232]
+```

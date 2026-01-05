@@ -77,8 +77,8 @@ npx prisma studio     # Проверка через UI
 
 4. Добавить в `.env.local`:
    ```javascript
-                           YOOKASSA_SHOP_ID="xxxxxx"
-                           YOOKASSA_SECRET_KEY="test_xxxxx"
+                              YOOKASSA_SHOP_ID="xxxxxx"
+                              YOOKASSA_SECRET_KEY="test_xxxxx"
    ```
 
 
@@ -135,5 +135,3 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom
 ```
 
 Создать тесты:
-
-- Валидация форм

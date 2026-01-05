@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach } from 'vitest'
 import { NextRequest } from 'next/server'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
-// Важно: мок prisma уже настроен в mocks/prisma.ts
 import { POST, GET } from '@/app/api/booking/route'
 
 describe('API: /api/booking', () => {
@@ -25,23 +24,22 @@ describe('API: /api/booking', () => {
       name: 'Стандарт',
       slug: 'standart',
       pricePerNight: 600,
-      beds: 8,
-      maxGuests: 8,
-      totalUnits: 3,
+      beds: 10,
+      maxGuests: 10,
+      totalUnits: 2,
       isActive: true,
     }
 
     it('создаёт бронирование с валидными данными', async () => {
+      // Мок поиска номера по ID
       prismaMock.roomType.findUnique.mockResolvedValue(mockRoomType)
-      prismaMock.booking.count.mockResolvedValue(0)
-      prismaMock.hotelSettings.findUnique.mockResolvedValue({
-        id: 'main',
-        discount2Days: 5,
-        discount7Days: 10,
-      })
+      // Мок подсчёта забронированных гостей (0 - все места свободны)
+      prismaMock.booking.aggregate.mockResolvedValue({ _sum: { guestsCount: 0 } })
+      // Мок создания бронирования
       prismaMock.booking.create.mockResolvedValue({
         id: 'booking-new-123',
         ...validBookingData,
+        roomTypeId: 'room-123',
         nights: 2,
         basePrice: 1200,
         discountPercent: 0,
@@ -66,6 +64,36 @@ describe('API: /api/booking', () => {
       expect(data.data.totalPrice).toBe(1200)
     })
 
+    it('создаёт бронирование по slug номера', async () => {
+      // Первый вызов findUnique (по ID) вернёт null
+      prismaMock.roomType.findUnique.mockResolvedValue(null)
+      // Второй вызов findFirst (по slug) вернёт номер
+      prismaMock.roomType.findFirst.mockResolvedValue(mockRoomType)
+      prismaMock.booking.aggregate.mockResolvedValue({ _sum: { guestsCount: 0 } })
+      prismaMock.booking.create.mockResolvedValue({
+        id: 'booking-slug-123',
+        roomTypeId: 'room-123',
+        nights: 2,
+        totalPrice: 1200,
+        status: 'PENDING',
+        roomType: { name: 'Стандарт', slug: 'standart' },
+      })
+
+      const request = new NextRequest('http://localhost:3000/api/booking', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...validBookingData,
+          roomTypeId: 'standart', // slug вместо ID
+        }),
+      })
+
+      const response = await POST(request)
+      const data = await response.json()
+
+      expect(response.status).toBe(200)
+      expect(data.success).toBe(true)
+    })
+
     it('возвращает ошибку при пустых полях', async () => {
       const request = new NextRequest('http://localhost:3000/api/booking', {
         method: 'POST',
@@ -82,6 +110,7 @@ describe('API: /api/booking', () => {
 
     it('возвращает ошибку при несуществующем roomTypeId', async () => {
       prismaMock.roomType.findUnique.mockResolvedValue(null)
+      prismaMock.roomType.findFirst.mockResolvedValue(null)
 
       const request = new NextRequest('http://localhost:3000/api/booking', {
         method: 'POST',
@@ -118,7 +147,8 @@ describe('API: /api/booking', () => {
 
     it('возвращает ошибку при отсутствии свободных мест', async () => {
       prismaMock.roomType.findUnique.mockResolvedValue(mockRoomType)
-      prismaMock.booking.count.mockResolvedValue(3) // Все 3 номера заняты
+      // 20 гостей уже забронировано (beds=10 x totalUnits=2 = 20 мест)
+      prismaMock.booking.aggregate.mockResolvedValue({ _sum: { guestsCount: 20 } })
 
       const request = new NextRequest('http://localhost:3000/api/booking', {
         method: 'POST',
@@ -130,6 +160,22 @@ describe('API: /api/booking', () => {
 
       expect(response.status).toBe(409)
       expect(data.error).toBe('Нет свободных мест на выбранные даты')
+    })
+
+    it('отклоняет honeypot-ботов', async () => {
+      const request = new NextRequest('http://localhost:3000/api/booking', {
+        method: 'POST',
+        body: JSON.stringify({
+          ...validBookingData,
+          website: 'http://spam.com', // honeypot field
+        }),
+      })
+
+      const response = await POST(request)
+      const data = await response.json()
+
+      expect(response.status).toBe(400)
+      expect(data.error).toBe('Ошибка валидации')
     })
   })
 

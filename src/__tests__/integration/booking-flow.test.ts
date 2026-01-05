@@ -1,6 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from 'vitest'
 import { prismaMock, resetPrismaMocks } from '../mocks/prisma'
-import { yookassaMock, resetYookassaMocks } from '../mocks/yookassa'
 import { 
   calculateNights, 
   calculateDiscount, 
@@ -8,26 +7,11 @@ import {
 } from '@/lib/utils'
 import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
 
-// Мокаем модули
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
-
-vi.mock('@/lib/yookassa', () => ({
-  createPayment: yookassaMock.createPayment,
-  getPayment: yookassaMock.getPayment,
-}))
-
-vi.mock('@/lib/telegram', () => ({
-  sendTelegramNotification: vi.fn().mockResolvedValue(true),
-  notifyNewBooking: vi.fn().mockResolvedValue(true),
-  notifyPaymentSuccess: vi.fn().mockResolvedValue(true),
-}))
+// Используем моки из setup.ts, не дублируем их здесь
 
 describe('Booking Flow Integration', () => {
   beforeEach(() => {
     resetPrismaMocks()
-    resetYookassaMocks()
   })
 
   describe('Полный flow бронирования', () => {
@@ -61,7 +45,7 @@ describe('Booking Flow Integration', () => {
       // 1. Создание бронирования
       prismaMock.booking.create.mockResolvedValue({
         id: bookingId,
-        roomTypeId: roomType.id || 'room-1',
+        roomTypeId: 'room-1',
         checkIn,
         checkOut,
         nights: 7,
@@ -83,8 +67,10 @@ describe('Booking Flow Integration', () => {
       expect(createdBooking.status).toBe('PENDING')
       expect(createdBooking.paymentStatus).toBe('PENDING')
 
-      // 2. Создание платежа
-      const payment = await yookassaMock.createPayment({
+      // 2. Проверяем что платёжная система возвращает URL
+      // Используем мок из setup.ts
+      const { createPayment } = await import('@/lib/yookassa')
+      const payment = await createPayment({
         amount: 3990,
         description: `Бронирование #${bookingId}`,
         bookingId,
@@ -120,7 +106,6 @@ describe('Booking Flow Integration', () => {
 
   describe('Проверка доступности', () => {
     it('учитывает существующие бронирования', async () => {
-      const roomType = ROOM_TYPES[0]
       const totalUnits = 3
 
       // Симулируем 2 существующих бронирования
@@ -128,7 +113,7 @@ describe('Booking Flow Integration', () => {
 
       const bookedCount = await prismaMock.booking.count({
         where: {
-          roomTypeId: roomType.id,
+          roomTypeId: 'room-1',
           status: { in: ['PENDING', 'CONFIRMED', 'CHECKED_IN'] },
         },
       })
@@ -209,4 +194,3 @@ describe('Booking Flow Integration', () => {
     })
   })
 })
-

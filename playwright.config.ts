@@ -18,23 +18,16 @@ export default defineConfig({
   },
   
   // Кросс-браузерное тестирование
+  // Для локальной разработки используем только доступные браузеры
   projects: [
-    // Desktop браузеры
+    // Desktop браузеры (всегда доступны через Playwright)
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
-    },
-    {
       name: 'webkit',
       use: { ...devices['Desktop Safari'] },
-    },
-    {
-      name: 'edge',
-      use: { ...devices['Desktop Edge'], channel: 'msedge' },
     },
     
     // Мобильные устройства
@@ -52,6 +45,16 @@ export default defineConfig({
       name: 'tablet',
       use: { ...devices['iPad (gen 7)'] },
     },
+    
+    // Firefox и Edge - опционально, раскомментируйте если установлены
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] },
+    // },
+    // {
+    //   name: 'edge',
+    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
+    // },
   ],
   
   webServer: {
