@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
-import { YandexMapStatic } from '@/components/ui/YandexMap'
+import { YandexMapStatic, YandexReviewsLink, getYandexMapsOrgUrl } from '@/components/ui/YandexMap'
 
 export default function Home() {
   return (
@@ -125,8 +125,66 @@ export default function Home() {
         </div>
       </section>
       
-      {/* Для организаций */}
+      {/* Отзывы гостей */}
       <section className="section">
+        <div className="container">
+          <h2 className="section-title text-center animate-fade-in-up">Отзывы гостей</h2>
+          <p className="section-subtitle text-center animate-fade-in-up delay-100">
+            Нас рекомендуют на Яндекс.Картах
+          </p>
+          
+          <div className="grid md:grid-cols-3 gap-6 mt-8">
+            {/* Отзыв 1 */}
+            <div className="bg-sand-50 rounded-xl p-6 card-hover animate-fade-in-up delay-200">
+              <div className="flex items-center gap-1 mb-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-400">⭐</span>
+                ))}
+              </div>
+              <p className="text-body text-coal-light italic mb-4">
+                «Отличное место для проживания! Чисто, уютно, персонал приветливый. 
+                Рядом всё необходимое. Рекомендую!»
+              </p>
+              <p className="text-small text-coal font-medium">— Гость, Яндекс.Карты</p>
+            </div>
+            
+            {/* Отзыв 2 */}
+            <div className="bg-sand-50 rounded-xl p-6 card-hover animate-fade-in-up delay-300">
+              <div className="flex items-center gap-1 mb-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-400">⭐</span>
+                ))}
+              </div>
+              <p className="text-body text-coal-light italic mb-4">
+                «Хороший хостел за свои деньги. Кухня работает круглосуточно, 
+                Wi-Fi быстрый. До моря недалеко.»
+              </p>
+              <p className="text-small text-coal font-medium">— Гость, Яндекс.Карты</p>
+            </div>
+            
+            {/* Отзыв 3 */}
+            <div className="bg-sand-50 rounded-xl p-6 card-hover animate-fade-in-up delay-400">
+              <div className="flex items-center gap-1 mb-3">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <span key={star} className="text-yellow-400">⭐</span>
+                ))}
+              </div>
+              <p className="text-body text-coal-light italic mb-4">
+                «Удобное расположение, всё рядом. Номера чистые, 
+                есть всё необходимое. Приеду ещё!»
+              </p>
+              <p className="text-small text-coal font-medium">— Гость, Яндекс.Карты</p>
+            </div>
+          </div>
+          
+          <div className="text-center mt-8 animate-fade-in-up delay-500">
+            <YandexReviewsLink className="text-body-lg font-medium" />
+          </div>
+        </div>
+      </section>
+      
+      {/* Для организаций */}
+      <section className="section bg-sand-50">
         <div className="container">
           <div className="bg-coal rounded-2xl p-8 md:p-12 text-center animate-fade-in-up">
             <h2 className="text-h2 text-white mb-4">Для организаций</h2>
@@ -142,7 +200,7 @@ export default function Home() {
       </section>
       
       {/* Контакты */}
-      <section className="section bg-sand-50">
+      <section className="section">
         <div className="container">
           <h2 className="section-title animate-fade-in-up">Где мы находимся</h2>
           

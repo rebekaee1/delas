@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { HOTEL } from '@/constants/hotel'
 import { SEO } from '@/constants/seo'
-import { YandexMapStatic } from '@/components/ui/YandexMap'
+import { YandexMapStatic, YandexReviewsLink } from '@/components/ui/YandexMap'
 import { MapPin, Phone, Mail, Clock, MessageCircle, Train, Building2 } from 'lucide-react'
 
 export const metadata: Metadata = {
@@ -31,6 +31,9 @@ export default function ContactsPage() {
             {/* Карта */}
             <div className="order-2 lg:order-1 animate-slide-in-left">
               <YandexMapStatic className="aspect-square lg:aspect-auto lg:h-full min-h-[400px]" />
+              <div className="mt-4 text-center">
+                <YandexReviewsLink className="text-body font-medium" />
+              </div>
             </div>
 
             {/* Контакты */}

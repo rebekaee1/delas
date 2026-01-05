@@ -3,6 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { HOTEL } from '@/constants/hotel'
 
+/**
+ * ID организации в Яндекс.Картах
+ * Источник: https://yandex.ru/maps/239/sochi/?poi[uri]=ymapsbm1://org?oid=125392534870
+ */
+const YANDEX_ORG_ID = '125392534870'
+
 interface YandexMapProps {
   className?: string
   zoom?: number
@@ -70,7 +76,7 @@ export function YandexMap({ className = '', zoom = 16 }: YandexMapProps) {
             <p>📞 <a href="tel:${HOTEL.contacts.phoneRaw}">${HOTEL.contacts.phone}</a></p>
             <p>⏰ Ресепшен: ${HOTEL.schedule.reception}</p>
           `,
-          balloonContentFooter: `<a href="https://yandex.ru/maps/?pt=${lng},${lat}&z=${zoom}&l=map" target="_blank">Открыть в Яндекс.Картах</a>`,
+          balloonContentFooter: `<a href="${getYandexMapsOrgUrl()}" target="_blank">Открыть в Яндекс.Картах</a>`,
         },
         {
           preset: 'islands#redHotelIcon',
@@ -87,11 +93,11 @@ export function YandexMap({ className = '', zoom = 16 }: YandexMapProps) {
   }
 
   if (error) {
-    // Fallback — ссылка на Яндекс.Карты
+    // Fallback — ссылка на организацию в Яндекс.Картах
     return (
       <div className={`bg-sand-50 rounded-xl overflow-hidden ${className}`}>
         <a
-          href={`https://yandex.ru/maps/?pt=${HOTEL.address.coordinates.lng},${HOTEL.address.coordinates.lat}&z=${zoom}&l=map`}
+          href={getYandexMapsOrgUrl()}
           target="_blank"
           rel="noopener noreferrer"
           className="block p-8 text-center hover:bg-sand transition-colors"
@@ -120,24 +126,52 @@ export function YandexMap({ className = '', zoom = 16 }: YandexMapProps) {
 }
 
 /**
- * Статичная карта без API ключа — использует iframe
- * Не требует регистрации, работает сразу
+ * Получить URL организации в Яндекс.Картах
+ */
+export function getYandexMapsOrgUrl() {
+  const { lat, lng } = HOTEL.address.coordinates
+  return `https://yandex.ru/maps/239/sochi/?ll=${lng}%2C${lat}&mode=poi&poi%5Bpoint%5D=${lng}%2C${lat}&poi%5Buri%5D=ymapsbm1%3A%2F%2Forg%3Foid%3D${YANDEX_ORG_ID}&z=17`
+}
+
+/**
+ * Статичная карта с привязкой к организации
+ * Показывает карточку хостела с отзывами
  */
 export function YandexMapStatic({ className = '' }: { className?: string }) {
   const { lat, lng } = HOTEL.address.coordinates
   
+  // Используем карту с привязкой к организации (oid)
+  const mapSrc = `https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&mode=search&oid=${YANDEX_ORG_ID}&ol=biz&z=17`
+  
   return (
     <div className={`rounded-xl overflow-hidden ${className}`}>
       <iframe
-        src={`https://yandex.ru/map-widget/v1/?ll=${lng}%2C${lat}&mode=whatshere&whatshere%5Bpoint%5D=${lng}%2C${lat}&whatshere%5Bzoom%5D=17&z=17`}
+        src={mapSrc}
         width="100%"
         height="100%"
         frameBorder="0"
         allowFullScreen
         style={{ minHeight: '300px', display: 'block' }}
-        title="Расположение хостела DELAS на карте"
+        title="Хостел DELAS на Яндекс.Картах"
       />
     </div>
   )
 }
 
+/**
+ * Компонент для отображения ссылки на отзывы
+ */
+export function YandexReviewsLink({ className = '' }: { className?: string }) {
+  return (
+    <a
+      href={getYandexMapsOrgUrl()}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`inline-flex items-center gap-2 text-terracotta hover:text-terracotta-dark transition-colors ${className}`}
+    >
+      <span>⭐</span>
+      <span>Смотреть отзывы на Яндекс.Картах</span>
+      <span>→</span>
+    </a>
+  )
+}
