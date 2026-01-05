@@ -20,9 +20,9 @@ export default function Home() {
             className="object-cover"
             sizes="100vw"
           />
-          {/* Затемняющий оверлей — сильнее слева где текст */}
-          <div className="absolute inset-0 bg-gradient-to-r from-coal/90 via-coal/60 to-transparent" />
-          <div className="absolute inset-0 bg-gradient-to-t from-coal/70 via-transparent to-coal/20" />
+          {/* Диагональный градиент — очень тёмный левый нижний угол */}
+          <div className="absolute inset-0 bg-gradient-to-tr from-black/90 via-black/70 via-40% to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 to-transparent" />
         </div>
         
         {/* Контент — внизу слева, чтобы не перекрывать логотип на стене */}
@@ -204,7 +204,7 @@ export default function Home() {
       </section>
       
       {/* Контакты */}
-      <section className="section">
+      <section className="py-16 md:py-20 bg-sand-50">
         <div className="container">
           <h2 className="section-title animate-fade-in-up">Где мы находимся</h2>
           
@@ -215,23 +215,23 @@ export default function Home() {
             </div>
             
             {/* Контактная информация */}
-            <div className="flex flex-col justify-center animate-slide-in-right">
-              <h3 className="text-h3 text-coal mb-4">{HOTEL.fullName}</h3>
+            <div className="flex flex-col justify-center animate-slide-in-right bg-sand-50 rounded-xl p-6 md:p-8">
+              <h3 className="text-h3 text-coal mb-6">{HOTEL.fullName}</h3>
               
-              <div className="space-y-3">
-                <p className="text-body text-coal-light hover:text-coal transition-colors">
+              <div className="space-y-4">
+                <p className="text-body text-coal">
                   📍 {HOTEL.address.full}
                 </p>
-                <p className="text-body text-coal-light">
+                <p className="text-body text-coal">
                   🌊 До моря: {HOTEL.distances.sea}
                 </p>
-                <p className="text-body text-coal-light">
+                <p className="text-body text-coal">
                   🚂 До ж/д вокзала: {HOTEL.distances.trainStation}
                 </p>
-                <p className="text-body text-coal-light">
+                <p className="text-body text-coal">
                   🕐 Ресепшен: {HOTEL.schedule.reception}
                 </p>
-                <a href={`tel:${HOTEL.contacts.phoneRaw}`} className="text-body text-terracotta hover:text-terracotta-dark transition-colors font-medium block">
+                <a href={`tel:${HOTEL.contacts.phoneRaw}`} className="text-body-lg text-terracotta hover:text-terracotta-dark transition-colors font-semibold block">
                   📞 {HOTEL.contacts.phone}
                 </a>
                 <a href={`mailto:${HOTEL.contacts.email}`} className="text-body text-terracotta hover:text-terracotta-dark transition-colors block">
@@ -239,7 +239,7 @@ export default function Home() {
                 </a>
               </div>
               
-              <div className="flex gap-4 mt-6">
+              <div className="flex gap-4 mt-8">
                 <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
                   <a href={`tel:${HOTEL.contacts.phoneRaw}`}>Позвонить</a>
                 </Button>
