@@ -143,7 +143,6 @@ export const ROOM_TYPES = [
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
     image4x3: '/images/comfort_4x3.webp',
-    image16x9: '/images/standard_16x9.webp',
   },
   {
     slug: 'komfort-plus',
@@ -154,7 +153,6 @@ export const ROOM_TYPES = [
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: false,
     image4x3: '/images/comfort+_4x3.webp',
-    image16x9: '/images/standard_16x9.webp',
   },
   {
     slug: 'zhenskiy-komfort-plus',
@@ -165,7 +163,6 @@ export const ROOM_TYPES = [
     amenities: ['Wi-Fi', 'Постельное бельё', 'Полотенце', 'Личная розетка', 'USB-зарядка', 'Светильник'],
     isWomenOnly: true,
     image4x3: '/images/women_4x3.webp',
-    image16x9: '/images/standard_16x9.webp',
   },
 ] as const
 

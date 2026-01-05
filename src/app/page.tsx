@@ -19,7 +19,7 @@ export default function Home() {
     <>
       {/* Hero секция с фото ресепшена */}
       <section className="relative min-h-[70vh] md:min-h-[80vh] overflow-hidden">
-        <HeroSlideshow images={heroSlides} intervalMs={4000} />
+        <HeroSlideshow images={heroSlides} intervalMs={2500} />
         
         {/* Контент — внизу слева, чтобы не перекрывать логотип на стене */}
         <div className="container relative z-10 flex flex-col justify-end min-h-[70vh] md:min-h-[80vh] py-12 md:py-16">
