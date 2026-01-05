@@ -4,6 +4,7 @@ import { vi } from 'vitest'
 export const prismaMock = {
   roomType: {
     findUnique: vi.fn(),
+    findFirst: vi.fn(),
     findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -11,6 +12,7 @@ export const prismaMock = {
   },
   booking: {
     findUnique: vi.fn(),
+    findFirst: vi.fn(),
     findMany: vi.fn(),
     create: vi.fn(),
     update: vi.fn(),
@@ -44,8 +46,3 @@ export function resetPrismaMocks() {
     })
   })
 }
-
-// Мокаем модуль prisma
-vi.mock('@/lib/prisma', () => ({
-  prisma: prismaMock,
-}))
