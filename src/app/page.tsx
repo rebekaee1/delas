@@ -74,14 +74,13 @@ export default function Home() {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {ROOM_TYPES.map((room, index) => (
-              <Link 
+              <div 
                 key={room.slug}
-                href={`/rooms/${room.slug}`}
-                className="card p-6 card-hover animate-fade-in-up block"
+                className="card p-6 card-hover animate-fade-in-up"
                 style={{ animationDelay: `${200 + index * 100}ms` }}
               >
-                {/* Фото */}
-                <div className="relative aspect-[4/3] bg-sand-200 rounded-lg mb-4 overflow-hidden group">
+                {/* Фото — кликабельное */}
+                <Link href={`/rooms/${room.slug}`} className="block relative aspect-[4/3] bg-sand-200 rounded-lg mb-4 overflow-hidden group">
                   <Image
                     src={room.image4x3}
                     alt={room.name}
@@ -90,24 +89,32 @@ export default function Home() {
                     sizes="(min-width: 1024px) 25vw, (min-width: 768px) 50vw, 100vw"
                     priority={index === 0}
                   />
-                </div>
+                </Link>
                 
                 {room.isWomenOnly && (
                   <Badge variant="sea" className="mb-2">Только для женщин</Badge>
                 )}
                 
-                <h3 className="text-h3 text-coal mb-1">{room.name}</h3>
+                <Link href={`/rooms/${room.slug}`} className="hover:text-terracotta transition-colors">
+                  <h3 className="text-h3 text-coal mb-1">{room.name}</h3>
+                </Link>
                 <p className="text-small text-coal-light mb-3">{room.beds} мест</p>
                 
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between mb-4">
                   <span className="text-body-lg font-semibold text-coal">
                     от {room.pricePerNight}₽
                   </span>
-                  <span className="text-small text-terracotta font-medium hover:underline">
-                    Подробнее →
-                  </span>
                 </div>
-              </Link>
+                
+                <div className="flex gap-2">
+                  <Button variant="outline" size="sm" asChild className="flex-1 border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                    <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
+                  </Button>
+                  <Button size="sm" asChild className="flex-1 bg-terracotta hover:bg-terracotta-dark btn-hover">
+                    <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
+                  </Button>
+                </div>
+              </div>
             ))}
           </div>
         </div>
