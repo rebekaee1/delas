@@ -74,8 +74,8 @@ export default function TermsPage() {
               <h2 className="text-h3 text-coal mt-8 mb-4">3. Оплата и скидки</h2>
               <ul className="list-disc list-inside text-body text-coal-light space-y-2 ml-4">
                 <li>Оплата производится онлайн при бронировании</li>
-                <li>Скидка {HOTEL.discounts.days2}% при проживании от 2 дней</li>
                 <li>Скидка {HOTEL.discounts.days7}% при проживании от 7 дней</li>
+                <li>Скидка {HOTEL.discounts.days30}% при проживании от 30 дней</li>
                 <li>Скидки применяются автоматически</li>
               </ul>
 

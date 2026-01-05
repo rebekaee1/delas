@@ -63,7 +63,7 @@ export function BookingForm() {
   // Расчёт цены
   const selectedRoomData = ROOM_TYPES.find(r => r.slug === selectedRoom)
   const nights = checkIn && checkOut ? calculateNights(checkIn, checkOut) : 0
-  const discountPercent = calculateDiscount(nights, HOTEL.discounts.days2, HOTEL.discounts.days7)
+  const discountPercent = calculateDiscount(nights, HOTEL.discounts.days7, HOTEL.discounts.days30)
   const pricePerNight = selectedRoomData?.pricePerNight || 0
   const { basePrice, discountAmount, totalPrice } = calculateTotalPrice(pricePerNight, nights, discountPercent)
 

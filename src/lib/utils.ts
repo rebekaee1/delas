@@ -92,14 +92,15 @@ export function pluralizeBeds(count: number): string {
 
 /**
  * Вычисляет скидку на основе количества ночей
+ * Скидки: 5% от 7 дней, 10% от 30 дней (по данным Авито)
  */
 export function calculateDiscount(
   nights: number, 
-  discount2Days: number = 5, 
-  discount7Days: number = 10
+  discount7Days: number = 5, 
+  discount30Days: number = 10
 ): number {
+  if (nights >= 30) return discount30Days
   if (nights >= 7) return discount7Days
-  if (nights >= 2) return discount2Days
   return 0
 }
 

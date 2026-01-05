@@ -127,12 +127,12 @@ export default function RoomsPage() {
             
             <div className="flex flex-col md:flex-row gap-6 justify-center">
               <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0 card-hover animate-scale-in delay-200">
-                <span className="text-4xl font-heading font-bold text-terracotta">{HOTEL.discounts.days2}%</span>
-                <p className="text-body text-coal mt-2">при проживании от 2 дней</p>
-              </div>
-              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0 card-hover animate-scale-in delay-300">
                 <span className="text-4xl font-heading font-bold text-terracotta">{HOTEL.discounts.days7}%</span>
                 <p className="text-body text-coal mt-2">при проживании от 7 дней</p>
+              </div>
+              <div className="bg-sand-50 rounded-xl p-6 text-center flex-1 max-w-xs mx-auto md:mx-0 card-hover animate-scale-in delay-300">
+                <span className="text-4xl font-heading font-bold text-terracotta">{HOTEL.discounts.days30}%</span>
+                <p className="text-body text-coal mt-2">при проживании от 30 дней</p>
               </div>
             </div>
           </div>

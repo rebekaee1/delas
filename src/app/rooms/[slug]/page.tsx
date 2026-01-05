@@ -93,7 +93,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
                   <span className="text-body text-coal-light">/ ночь</span>
                 </div>
                 <p className="text-small text-coal-light mt-2">
-                  Скидка {HOTEL.discounts.days2}% от 2 дней, {HOTEL.discounts.days7}% от 7 дней
+                  Скидка {HOTEL.discounts.days7}% от 7 дней, {HOTEL.discounts.days30}% от 30 дней
                 </p>
               </div>
 
