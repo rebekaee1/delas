@@ -25,8 +25,23 @@ const golosText = Golos_Text({
 })
 
 // SEO метаданные согласно BUSINESS_INFO.md
-// Используем .trim() для защиты от пробелов в переменных окружения TimeWeb
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || 'https://hostel-delas.ru').trim()
+// Защита от неправильного формата переменных в TimeWeb (пробелы вокруг =)
+function getSiteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL || ''
+  // Если строка содержит "= http" — значит TimeWeb неправильно спарсил, берём только URL
+  if (raw.includes('= http')) {
+    const match = raw.match(/https?:\/\/[^\s]+/)
+    if (match) return match[0].trim()
+  }
+  const trimmed = raw.trim()
+  // Валидация URL
+  if (trimmed && (trimmed.startsWith('http://') || trimmed.startsWith('https://'))) {
+    return trimmed
+  }
+  return 'https://hostel-delas.ru'
+}
+
+const siteUrl = getSiteUrl()
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
