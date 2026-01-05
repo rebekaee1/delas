@@ -1,13 +1,13 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { format, addDays } from 'date-fns'
 import { ru } from 'date-fns/locale'
 import Link from 'next/link'
-import { Calendar as CalendarIcon, Users, Loader2, AlertCircle } from 'lucide-react'
+import { Calendar as CalendarIcon, Users, Loader2, AlertCircle, Check, X } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -51,6 +51,57 @@ export function BookingForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [consentPD, setConsentPD] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  
+  // Состояние доступности мест
+  const [availability, setAvailability] = useState<Record<string, { available: number; total: number; loading: boolean }>>({})
+  
+  // Загружаем доступность при изменении дат
+  useEffect(() => {
+    if (!checkIn || !checkOut) {
+      setAvailability({})
+      return
+    }
+    
+    // Загружаем для всех типов номеров
+    ROOM_TYPES.forEach(async (room) => {
+      setAvailability(prev => ({
+        ...prev,
+        [room.slug]: { ...prev[room.slug], loading: true, available: 0, total: room.beds }
+      }))
+      
+      try {
+        const res = await fetch('/api/rooms/availability', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            roomTypeId: room.slug,
+            checkIn: checkIn.toISOString(),
+            checkOut: checkOut.toISOString(),
+            guests: 1,
+          }),
+        })
+        
+        const data = await res.json()
+        
+        if (data.success) {
+          setAvailability(prev => ({
+            ...prev,
+            [room.slug]: {
+              available: data.data.availableBeds || 0,
+              total: data.data.totalBeds || room.beds,
+              loading: false,
+            }
+          }))
+        }
+      } catch (err) {
+        console.error('Error fetching availability:', err)
+        setAvailability(prev => ({
+          ...prev,
+          [room.slug]: { available: 0, total: room.beds, loading: false }
+        }))
+      }
+    })
+  }, [checkIn, checkOut])
 
   // Форма гостя
   const form = useForm<GuestFormInput>({
@@ -154,33 +205,87 @@ export function BookingForm() {
           </CardHeader>
           <CardContent>
             <div className="grid sm:grid-cols-2 gap-4">
-              {ROOM_TYPES.map((room) => (
-                <button
-                  key={room.slug}
-                  type="button"
-                  onClick={() => setSelectedRoom(room.slug)}
-                  className={cn(
-                    'text-left p-4 rounded-lg border-2 transition-all',
-                    selectedRoom === room.slug
-                      ? 'border-terracotta bg-terracotta/5'
-                      : 'border-sand-200 bg-sand hover:border-terracotta/50'
-                  )}
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <span className="font-medium text-coal">{room.name}</span>
-                    {room.isWomenOnly && (
-                      <Badge variant="sea" className="text-xs">Жен</Badge>
+              {ROOM_TYPES.map((room) => {
+                const roomAvail = availability[room.slug]
+                const hasAvailability = checkIn && checkOut && roomAvail && !roomAvail.loading
+                const isAvailable = !hasAvailability || roomAvail.available > 0
+                const occupancyPercent = hasAvailability 
+                  ? Math.round(((roomAvail.total - roomAvail.available) / roomAvail.total) * 100)
+                  : 0
+                
+                return (
+                  <button
+                    key={room.slug}
+                    type="button"
+                    onClick={() => isAvailable && setSelectedRoom(room.slug)}
+                    disabled={!isAvailable}
+                    className={cn(
+                      'text-left p-4 rounded-lg border-2 transition-all',
+                      !isAvailable && 'opacity-50 cursor-not-allowed',
+                      selectedRoom === room.slug
+                        ? 'border-terracotta bg-terracotta/5'
+                        : 'border-sand-200 bg-sand hover:border-terracotta/50'
                     )}
-                  </div>
-                  <div className="flex items-center gap-2 text-small text-coal-light mb-2">
-                    <Users className="h-4 w-4" />
-                    <span>{room.beds} мест</span>
-                  </div>
-                  <span className="text-body font-semibold text-terracotta">
-                    от {room.pricePerNight}₽/ночь
-                  </span>
-                </button>
-              ))}
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <span className="font-medium text-coal">{room.name}</span>
+                      <div className="flex gap-1">
+                        {room.isWomenOnly && (
+                          <Badge variant="sea" className="text-xs">Жен</Badge>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Показываем доступность если выбраны даты */}
+                    {hasAvailability ? (
+                      <div className="mb-3">
+                        <div className="flex items-center justify-between text-small mb-1">
+                          <span className="text-coal-light">
+                            {roomAvail.available > 0 ? (
+                              <span className="flex items-center gap-1">
+                                <Check className="h-3 w-3 text-green-600" />
+                                <span className="text-green-700 font-medium">
+                                  {roomAvail.available} из {roomAvail.total} мест
+                                </span>
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1 text-red-600">
+                                <X className="h-3 w-3" />
+                                <span>Нет мест</span>
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                        {/* Прогресс-бар заполненности */}
+                        <div className="h-1.5 bg-sand-200 rounded-full overflow-hidden">
+                          <div 
+                            className={cn(
+                              'h-full rounded-full transition-all duration-300',
+                              occupancyPercent >= 80 ? 'bg-red-400' :
+                              occupancyPercent >= 50 ? 'bg-amber-400' : 'bg-green-400'
+                            )}
+                            style={{ width: `${occupancyPercent}%` }}
+                          />
+                        </div>
+                      </div>
+                    ) : roomAvail?.loading ? (
+                      <div className="flex items-center gap-2 text-small text-coal-light mb-3">
+                        <Loader2 className="h-3 w-3 animate-spin" />
+                        <span>Проверяем...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 text-small text-coal-light mb-3">
+                        <Users className="h-4 w-4" />
+                        <span>{room.beds} мест</span>
+                      </div>
+                    )}
+                    
+                    <span className="text-body font-semibold text-terracotta">
+                      от {room.pricePerNight}₽/ночь
+                    </span>
+                  </button>
+                )
+              })}
             </div>
           </CardContent>
         </Card>
