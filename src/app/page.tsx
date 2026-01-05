@@ -111,12 +111,12 @@ export default function Home() {
                     </span>
                   </div>
                   
-                  <div className="flex gap-2">
-                    <Button variant="outline" size="sm" asChild className="flex-1 border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
-                      <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
-                    </Button>
-                    <Button size="sm" asChild className="flex-1 bg-terracotta hover:bg-terracotta-dark btn-hover">
+                  <div className="flex flex-col gap-2">
+                    <Button size="sm" asChild className="w-full bg-terracotta hover:bg-terracotta-dark btn-hover">
                       <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
+                    </Button>
+                    <Button variant="outline" size="sm" asChild className="w-full border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                      <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
                     </Button>
                   </div>
                 </div>
