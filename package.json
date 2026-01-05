@@ -65,7 +65,11 @@
     "postcss": "^8.5.4",
     "tailwindcss": "^3.4.17",
     "prisma": "^6.9.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@types/node": "^22.15.29",
+    "@types/nodemailer": "^7.0.4",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5"
   },
   "devDependencies": {
     "@playwright/test": "^1.57.0",
@@ -73,10 +77,6 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
-    "@types/node": "^22.15.29",
-    "@types/nodemailer": "^7.0.4",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
     "@vitejs/plugin-react": "^5.1.2",
     "@vitest/coverage-v8": "^3.2.4",
     "eslint": "^9.28.0",
