@@ -3,12 +3,17 @@ export const dynamic = 'force-dynamic'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getPayment } from '@/lib/yookassa'
+import { notifyPaymentSuccess } from '@/lib/telegram'
+import { sendBookingConfirmation } from '@/lib/email'
 
 /**
  * GET /api/payment/status?bookingId=xxx
  * Проверка статуса платежа по ID бронирования
  */
 export async function GET(request: NextRequest) {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/3268fec8-68c2-4f8e-b7bf-6c7b4c0e3927',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'payment/status/route.ts:15',message:'Payment status check initiated',data:{url:request.url},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
   try {
     const { searchParams } = new URL(request.url)
     const bookingId = searchParams.get('bookingId')
@@ -68,18 +73,56 @@ export async function GET(request: NextRequest) {
     // Запрашиваем актуальный статус у ЮKassa
     try {
       const payment = await getPayment(booking.paymentId)
+      // #region agent log
+      fetch('http://127.0.0.1:7243/ingest/3268fec8-68c2-4f8e-b7bf-6c7b4c0e3927',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'payment/status/route.ts:78',message:'YooKassa payment status received',data:{paymentId:booking.paymentId,yookassaStatus:payment.status,currentDbStatus:booking.paymentStatus},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H2'})}).catch(()=>{});
+      // #endregion
 
       // Обновляем статус в БД если изменился
       // (booking.paymentStatus !== 'SUCCEEDED' уже проверено выше)
       if (payment.status === 'succeeded') {
-        await prisma.booking.update({
+        // Получаем полные данные бронирования для уведомлений
+        const fullBooking = await prisma.booking.update({
           where: { id: bookingId },
           data: {
             paymentStatus: 'SUCCEEDED',
             status: 'CONFIRMED',
             paidAt: new Date(),
           },
+          include: {
+            roomType: true,
+          },
         })
+
+        // #region agent log
+        fetch('http://127.0.0.1:7243/ingest/3268fec8-68c2-4f8e-b7bf-6c7b4c0e3927',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'payment/status/route.ts:95',message:'Payment succeeded - updating DB and sending notifications',data:{bookingId:fullBooking.id,newStatus:'CONFIRMED'},timestamp:Date.now(),sessionId:'debug-session',runId:'run2',hypothesisId:'H3'})}).catch(()=>{});
+        // #endregion
+
+        // Отправляем уведомление в Telegram (асинхронно)
+        notifyPaymentSuccess({
+          id: fullBooking.id,
+          guestName: fullBooking.guestName,
+          guestPhone: fullBooking.guestPhone,
+          guestEmail: fullBooking.guestEmail,
+          roomTypeName: fullBooking.roomType.name,
+          checkIn: fullBooking.checkIn,
+          checkOut: fullBooking.checkOut,
+          nights: fullBooking.nights,
+          totalPrice: fullBooking.totalPrice,
+          guestsCount: fullBooking.guestsCount,
+        }).catch(err => console.error('Telegram notification error:', err))
+
+        // Отправляем email подтверждение (асинхронно)
+        sendBookingConfirmation({
+          id: fullBooking.id,
+          guestEmail: fullBooking.guestEmail,
+          guestName: fullBooking.guestName,
+          roomTypeName: fullBooking.roomType.name,
+          checkIn: fullBooking.checkIn,
+          checkOut: fullBooking.checkOut,
+          nights: fullBooking.nights,
+          totalPrice: fullBooking.totalPrice,
+          guestsCount: fullBooking.guestsCount,
+        }).catch(err => console.error('Email notification error:', err))
       } else if (payment.status === 'canceled' && booking.paymentStatus !== 'CANCELED') {
         await prisma.booking.update({
           where: { id: bookingId },

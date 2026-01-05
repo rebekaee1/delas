@@ -15,13 +15,21 @@ import { WebhookEvent } from '@/lib/yookassa'
  * - payment.canceled - платёж отменён
  */
 export async function POST(request: NextRequest) {
+  // #region agent log
+  fetch('http://127.0.0.1:7243/ingest/3268fec8-68c2-4f8e-b7bf-6c7b4c0e3927',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({location:'webhook/route.ts:18',message:'Webhook received',data:{headers:Object.fromEntries(request.headers)},timestamp:Date.now(),sessionId:'debug-session',runId:'webhook-debug',hypothesisId:'H1'})}).catch(()=>{});
+  // #endregion
+  console.log('[YooKassa Webhook] Request received at:', new Date().toISOString())
+  
   try {
     const body = await request.text()
+    console.log('[YooKassa Webhook] Body:', body.substring(0, 500))
+    
     let event: WebhookEvent
 
     try {
       event = JSON.parse(body)
     } catch {
+      console.error('[YooKassa Webhook] Invalid JSON:', body.substring(0, 200))
       return NextResponse.json(
         { error: 'Invalid JSON' },
         { status: 400 }
@@ -109,6 +117,8 @@ async function handlePaymentSucceeded(
   },
   payment: { id: string; amount: { value: string } }
 ) {
+  console.log(`[YooKassa Webhook] handlePaymentSucceeded called for booking: ${booking.id}`)
+  
   // Обновляем статус бронирования
   await prisma.booking.update({
     where: { id: booking.id },
