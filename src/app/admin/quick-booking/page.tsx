@@ -166,12 +166,12 @@ function QuickBookingContent() {
             <CardContent className="pt-4 space-y-4">
               {/* Тип номера */}
               <div>
-                <Label>Номер *</Label>
+                <Label htmlFor="roomType">Номер *</Label>
                 <Select
                   value={formData.roomType}
                   onValueChange={(v) => setFormData(prev => ({ ...prev, roomType: v }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="roomType">
                     <SelectValue placeholder="Выберите номер" />
                   </SelectTrigger>
                   <SelectContent>
@@ -187,10 +187,11 @@ function QuickBookingContent() {
               {/* Даты */}
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label>Заезд *</Label>
+                  <Label htmlFor="adminCheckIn">Заезд *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
+                        id="adminCheckIn"
                         variant="outline"
                         className={cn(
                           'w-full justify-start text-left font-normal',
@@ -221,10 +222,11 @@ function QuickBookingContent() {
                 </div>
                 
                 <div>
-                  <Label>Выезд *</Label>
+                  <Label htmlFor="adminCheckOut">Выезд *</Label>
                   <Popover>
                     <PopoverTrigger asChild>
                       <Button
+                        id="adminCheckOut"
                         variant="outline"
                         className={cn(
                           'w-full justify-start text-left font-normal',
@@ -250,8 +252,9 @@ function QuickBookingContent() {
               
               {/* Гость */}
               <div>
-                <Label>Имя гостя *</Label>
+                <Label htmlFor="adminGuestName">Имя гостя *</Label>
                 <Input
+                  id="adminGuestName"
                   value={formData.guestName}
                   onChange={(e) => setFormData(prev => ({ ...prev, guestName: e.target.value }))}
                   placeholder="Иван Иванов"
@@ -260,20 +263,21 @@ function QuickBookingContent() {
               
               <div className="grid grid-cols-2 gap-2">
                 <div>
-                  <Label>Телефон</Label>
+                  <Label htmlFor="adminGuestPhone">Телефон</Label>
                   <Input
+                    id="adminGuestPhone"
                     value={formData.guestPhone}
                     onChange={(e) => setFormData(prev => ({ ...prev, guestPhone: e.target.value }))}
                     placeholder="+7..."
                   />
                 </div>
                 <div>
-                  <Label>Гостей</Label>
+                  <Label htmlFor="adminGuestsCount">Гостей</Label>
                   <Select
                     value={String(formData.guestsCount)}
                     onValueChange={(v) => setFormData(prev => ({ ...prev, guestsCount: Number(v) }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger id="adminGuestsCount">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -287,12 +291,12 @@ function QuickBookingContent() {
               
               {/* Оплата */}
               <div>
-                <Label>Оплата</Label>
+                <Label htmlFor="adminPayment">Оплата</Label>
                 <Select
                   value={formData.paymentMethod}
                   onValueChange={(v) => setFormData(prev => ({ ...prev, paymentMethod: v }))}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="adminPayment">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
@@ -305,8 +309,9 @@ function QuickBookingContent() {
               
               {/* Комментарий */}
               <div>
-                <Label>Комментарий</Label>
+                <Label htmlFor="adminComment">Комментарий</Label>
                 <Input
+                  id="adminComment"
                   value={formData.comment}
                   onChange={(e) => setFormData(prev => ({ ...prev, comment: e.target.value }))}
                   placeholder="Любые заметки..."

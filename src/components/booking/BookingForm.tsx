@@ -304,10 +304,11 @@ export function BookingForm() {
             <div className="grid sm:grid-cols-2 gap-4">
               {/* Дата заезда */}
               <div className="space-y-2">
-                <Label>Дата заезда</Label>
+                <Label htmlFor="checkIn">Дата заезда</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
+                      id="checkIn"
                       variant="outline"
                       className={cn(
                         'w-full justify-start text-left font-normal bg-sand border-sand-200',
@@ -338,10 +339,11 @@ export function BookingForm() {
 
               {/* Дата выезда */}
               <div className="space-y-2">
-                <Label>Дата выезда</Label>
+                <Label htmlFor="checkOut">Дата выезда</Label>
                 <Popover>
                   <PopoverTrigger asChild>
                     <Button
+                      id="checkOut"
                       variant="outline"
                       className={cn(
                         'w-full justify-start text-left font-normal bg-sand border-sand-200',
@@ -440,7 +442,7 @@ export function BookingForm() {
                   value={String(form.watch('guestsCount'))}
                   onValueChange={(value) => form.setValue('guestsCount', parseInt(value))}
                 >
-                  <SelectTrigger className="bg-sand border-sand-200">
+                  <SelectTrigger id="guestsCount" className="bg-sand border-sand-200">
                     <SelectValue placeholder="Выберите" />
                   </SelectTrigger>
                   <SelectContent>
@@ -483,8 +485,9 @@ export function BookingForm() {
 
               {/* Согласие на обработку персональных данных */}
               <div className="space-y-2 pt-2">
-                <label className="flex items-start gap-3 cursor-pointer">
+                <label htmlFor="consentPD" className="flex items-start gap-3 cursor-pointer">
                   <input
+                    id="consentPD"
                     type="checkbox"
                     checked={consentPD}
                     onChange={(e) => setConsentPD(e.target.checked)}
