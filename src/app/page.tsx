@@ -76,7 +76,7 @@ export default function Home() {
             {ROOM_TYPES.map((room, index) => (
               <div 
                 key={room.slug}
-                className="card p-6 card-hover animate-fade-in-up"
+                className="card p-6 card-hover animate-fade-in-up flex flex-col h-full"
                 style={{ animationDelay: `${200 + index * 100}ms` }}
               >
                 {/* Фото — кликабельное */}
@@ -91,28 +91,34 @@ export default function Home() {
                   />
                 </Link>
                 
-                {room.isWomenOnly && (
-                  <Badge variant="sea" className="mb-2">Только для женщин</Badge>
-                )}
+                {/* Бейдж с фиксированной высотой */}
+                <div className="h-7 mb-1">
+                  {room.isWomenOnly && (
+                    <Badge variant="sea">Только для женщин</Badge>
+                  )}
+                </div>
                 
                 <Link href={`/rooms/${room.slug}`} className="hover:text-terracotta transition-colors">
                   <h3 className="text-h3 text-coal mb-1">{room.name}</h3>
                 </Link>
                 <p className="text-small text-coal-light mb-3">{room.beds} мест</p>
                 
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-body-lg font-semibold text-coal">
-                    от {room.pricePerNight}₽
-                  </span>
-                </div>
-                
-                <div className="flex gap-2">
-                  <Button variant="outline" size="sm" asChild className="flex-1 border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
-                    <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
-                  </Button>
-                  <Button size="sm" asChild className="flex-1 bg-terracotta hover:bg-terracotta-dark btn-hover">
-                    <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
-                  </Button>
+                {/* Растягиваем пространство, чтобы кнопки были внизу */}
+                <div className="mt-auto">
+                  <div className="mb-4">
+                    <span className="text-body-lg font-semibold text-coal">
+                      от {room.pricePerNight}₽
+                    </span>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button variant="outline" size="sm" asChild className="flex-1 border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                      <Link href={`/rooms/${room.slug}`}>Подробнее</Link>
+                    </Button>
+                    <Button size="sm" asChild className="flex-1 bg-terracotta hover:bg-terracotta-dark btn-hover">
+                      <Link href={`/booking?room=${room.slug}`}>Забронировать</Link>
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
