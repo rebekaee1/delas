@@ -56,9 +56,9 @@ export default function CorporatePage() {
                 <a href="#form">Оставить заявку</a>
               </Button>
               <Button asChild size="lg" variant="outline" className="border-sand-200 text-sand-200 hover:bg-sand-200 hover:text-coal btn-hover">
-                <a href={`tel:${HOTEL.contacts.phoneRaw}`}>
+                <a href={`tel:${HOTEL.contacts.phoneCorporateRaw}`}>
                   <Phone className="h-5 w-5 mr-2" />
-                  {HOTEL.contacts.phone}
+                  {HOTEL.contacts.phoneCorporate}
                 </a>
               </Button>
             </div>
@@ -243,9 +243,9 @@ export default function CorporatePage() {
               Наш менеджер ответит на все вопросы и поможет оформить бронирование
             </p>
             <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark">
-              <a href={`tel:${HOTEL.contacts.phoneRaw}`}>
+              <a href={`tel:${HOTEL.contacts.phoneCorporateRaw}`}>
                 <Phone className="h-5 w-5 mr-2" />
-                {HOTEL.contacts.phone}
+                {HOTEL.contacts.phoneCorporate}
               </a>
             </Button>
           </div>

@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
+import { YandexMapStatic } from '@/components/ui/YandexMap'
 
 export default function Home() {
   return (
@@ -146,33 +147,44 @@ export default function Home() {
           <h2 className="section-title animate-fade-in-up">Где мы находимся</h2>
           
           <div className="grid md:grid-cols-2 gap-8">
-            {/* Карта - заглушка (TODO: добавить Яндекс.Карты) */}
-            <div className="aspect-video bg-sand-200 rounded-xl flex items-center justify-center animate-slide-in-left">
-              <span className="text-coal-muted">Карта</span>
+            {/* Яндекс.Карты */}
+            <div className="animate-slide-in-left">
+              <YandexMapStatic className="aspect-video min-h-[300px]" />
             </div>
             
             {/* Контактная информация */}
             <div className="flex flex-col justify-center animate-slide-in-right">
               <h3 className="text-h3 text-coal mb-4">{HOTEL.fullName}</h3>
               
-              <div className="space-y-4">
+              <div className="space-y-3">
                 <p className="text-body text-coal-light hover:text-coal transition-colors">
                   📍 {HOTEL.address.full}
                 </p>
                 <p className="text-body text-coal-light">
-                  🕐 Круглосуточно
+                  🌊 До моря: {HOTEL.distances.sea}
                 </p>
-                <p className="text-body text-coal-light hover:text-coal transition-colors">
+                <p className="text-body text-coal-light">
+                  🚂 До ж/д вокзала: {HOTEL.distances.trainStation}
+                </p>
+                <p className="text-body text-coal-light">
+                  🕐 Ресепшен: {HOTEL.schedule.reception}
+                </p>
+                <a href={`tel:${HOTEL.contacts.phoneRaw}`} className="text-body text-terracotta hover:text-terracotta-dark transition-colors font-medium block">
                   📞 {HOTEL.contacts.phone}
-                </p>
-                <p className="text-body text-coal-light hover:text-coal transition-colors">
+                </a>
+                <a href={`mailto:${HOTEL.contacts.email}`} className="text-body text-terracotta hover:text-terracotta-dark transition-colors block">
                   ✉️ {HOTEL.contacts.email}
-                </p>
+                </a>
               </div>
               
-              <div className="mt-6">
+              <div className="flex gap-4 mt-6">
                 <Button asChild className="bg-terracotta hover:bg-terracotta-dark btn-hover">
                   <a href={`tel:${HOTEL.contacts.phoneRaw}`}>Позвонить</a>
+                </Button>
+                <Button asChild variant="outline" className="border-terracotta text-terracotta hover:bg-terracotta hover:text-white btn-hover">
+                  <a href={`https://wa.me/${HOTEL.contacts.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                    WhatsApp
+                  </a>
                 </Button>
               </div>
             </div>
