@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -220,9 +221,9 @@ export default function CorporatePage() {
                   
                   <p className="text-small text-coal-light text-center">
                     Нажимая кнопку, вы соглашаетесь с{' '}
-                    <a href="/privacy" className="text-terracotta hover:underline">
+                    <Link href="/privacy" className="text-terracotta hover:underline">
                       политикой конфиденциальности
-                    </a>
+                    </Link>
                   </p>
                 </form>
               </CardContent>

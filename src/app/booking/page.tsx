@@ -1,5 +1,7 @@
 import { Metadata } from 'next'
 import { Suspense } from 'react'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 import { BookingForm } from '@/components/booking/BookingForm'
 import { SEO } from '@/constants/seo'
 
@@ -15,8 +17,21 @@ export const metadata: Metadata = {
 export default function BookingPage() {
   return (
     <>
+      {/* Навигация назад */}
+      <section className="bg-sand py-4">
+        <div className="container">
+          <Link 
+            href="/rooms" 
+            className="inline-flex items-center gap-2 text-body text-coal-light hover:text-coal transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Выбрать другой номер
+          </Link>
+        </div>
+      </section>
+
       {/* Hero */}
-      <section className="bg-sand py-12 md:py-16 overflow-hidden">
+      <section className="bg-sand pb-12 md:pb-16 overflow-hidden">
         <div className="container">
           <h1 className="text-h1 text-coal mb-4 animate-fade-in-up">Бронирование</h1>
           <p className="text-body-lg text-coal-light max-w-2xl animate-fade-in-up delay-100">
