@@ -4,6 +4,9 @@ const nextConfig = {
   // output: 'standalone',
   
   images: {
+    // Отключаем серверную оптимизацию — изображения уже в webp
+    // Это решает проблему EACCES: permission denied для кэша
+    unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
