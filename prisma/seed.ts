@@ -31,13 +31,13 @@ async function main() {
     {
       name: 'Стандарт',
       slug: 'standart',
-      description: 'Базовое размещение в общем номере. Всё необходимое для комфортного отдыха.',
+      description: 'Базовое размещение в общем номере. Всё необходимое для комфортного отдыха. 10 койко-мест.',
       beds: 10,
       pricePerNight: 600,
       amenities: ['Wi-Fi', 'Постельное бельё', 'Доступ на кухню', 'Душ'],
       images: [],
       maxGuests: 10,
-      totalUnits: 2, // 2 номера этого типа
+      totalUnits: 1, // 1 номер с 10 койко-местами (ХОСТЕЛ!)
       isActive: true,
       isWomenOnly: false,
       sortOrder: 1,
@@ -45,13 +45,13 @@ async function main() {
     {
       name: 'Комфорт',
       slug: 'komfort',
-      description: 'Повышенный комфорт: кровать с деревянной обшивкой, индивидуальная розетка, USB-зарядка и личный светильник.',
+      description: 'Повышенный комфорт: кровать с деревянной обшивкой, индивидуальная розетка, USB-зарядка и личный светильник. 8 койко-мест.',
       beds: 8,
       pricePerNight: 800,
       amenities: ['Wi-Fi', 'Постельное бельё', 'Личная розетка', 'USB-зарядка', 'Светильник', 'Доступ на кухню', 'Душ'],
       images: [],
       maxGuests: 8,
-      totalUnits: 2,
+      totalUnits: 1, // 1 номер с 8 койко-местами (ХОСТЕЛ!)
       isActive: true,
       isWomenOnly: false,
       sortOrder: 2,
@@ -59,13 +59,13 @@ async function main() {
     {
       name: 'Комфорт+',
       slug: 'komfort-plus',
-      description: 'Меньше людей в номере — больше пространства и тишины. Все удобства номера Комфорт.',
+      description: 'Меньше людей в номере — больше пространства и тишины. Все удобства номера Комфорт. 6 койко-мест.',
       beds: 6,
       pricePerNight: 900,
       amenities: ['Wi-Fi', 'Постельное бельё', 'Личная розетка', 'USB-зарядка', 'Светильник', 'Доступ на кухню', 'Душ'],
       images: [],
       maxGuests: 6,
-      totalUnits: 1,
+      totalUnits: 1, // 1 номер с 6 койко-местами (ХОСТЕЛ!)
       isActive: true,
       isWomenOnly: false,
       sortOrder: 3,
@@ -73,13 +73,13 @@ async function main() {
     {
       name: 'Женский Комфорт+',
       slug: 'zhenskiy-komfort-plus',
-      description: 'Только для женщин. Максимальная приватность, всего 4 места в номере. Все удобства номера Комфорт.',
+      description: 'Только для женщин. Максимальная приватность, всего 4 койко-места в номере. Все удобства номера Комфорт.',
       beds: 4,
       pricePerNight: 800,
       amenities: ['Wi-Fi', 'Постельное бельё', 'Личная розетка', 'USB-зарядка', 'Светильник', 'Доступ на кухню', 'Душ', 'Только для женщин'],
       images: [],
       maxGuests: 4,
-      totalUnits: 1,
+      totalUnits: 1, // 1 номер с 4 койко-местами (ХОСТЕЛ, только для женщин!)
       isActive: true,
       isWomenOnly: true,
       sortOrder: 4,
