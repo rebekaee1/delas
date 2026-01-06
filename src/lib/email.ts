@@ -16,24 +16,38 @@ const SMTP_USER = process.env.SMTP_USER || 'info@hostel-delas.ru'
 const SMTP_PASSWORD = process.env.SMTP_PASSWORD
 
 // Создаём транспорт для отправки
-const transporter = SMTP_PASSWORD
-  ? nodemailer.createTransport({
-      host: SMTP_HOST,
-      port: SMTP_PORT,
-      secure: SMTP_PORT === 465, // SSL только для 465 порта, для 587 - STARTTLS
-      auth: {
-        user: SMTP_USER,
-        pass: SMTP_PASSWORD,
-      },
-      tls: {
-        // Для TimeWeb и других хостингов, которые могут иметь самоподписанные сертификаты
-        rejectUnauthorized: false,
-      },
-      connectionTimeout: 10000, // 10 секунд
-      greetingTimeout: 5000,
-      socketTimeout: 15000,
-    })
-  : null
+let transporter = null
+
+if (SMTP_PASSWORD) {
+  // Основной SMTP с авторизацией
+  transporter = nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465, // SSL только для 465 порта, для 587 - STARTTLS
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASSWORD,
+    },
+    tls: {
+      // Для TimeWeb и других хостингов, которые могут иметь самоподписанные сертификаты
+      rejectUnauthorized: false,
+    },
+    connectionTimeout: 10000, // 10 секунд
+    greetingTimeout: 5000,
+    socketTimeout: 15000,
+  })
+} else if (SMTP_HOST === 'localhost' || SMTP_HOST === '127.0.0.1') {
+  // Локальный SMTP relay (без авторизации) - часто доступен на хостингах
+  console.log('[Email] Using localhost SMTP relay without auth')
+  transporter = nodemailer.createTransport({
+    host: 'localhost',
+    port: 25,
+    secure: false,
+    tls: {
+      rejectUnauthorized: false,
+    },
+  })
+}
 
 // Логируем конфигурацию SMTP (без пароля)
 if (transporter) {

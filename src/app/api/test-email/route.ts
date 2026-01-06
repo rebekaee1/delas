@@ -32,6 +32,10 @@ export async function GET(request: NextRequest) {
             port: process.env.SMTP_PORT,
             user: process.env.SMTP_USER,
             passwordSet: !!process.env.SMTP_PASSWORD,
+          },
+          suggestions: {
+            localhost_smtp: 'Попробуйте SMTP_HOST=localhost и SMTP_PORT=25 (internal relay)',
+            timeweb_internal: 'Или SMTP_HOST=smtp (может быть внутренний DNS)',
           }
         },
         { status: 400 }
