@@ -4,6 +4,9 @@
   "private": true,
   "description": "Сайт хостела DELAS в Сочи - cache bust",
   "cacheVersion": "2025-01-06",
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "prisma generate && next build",
