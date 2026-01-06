@@ -7,7 +7,9 @@
  */
 
 import nodemailer from 'nodemailer'
+import type { Transporter } from 'nodemailer'
 import { HOTEL } from '@/constants/hotel'
+import { sendEmailViaUniSender, testUniSenderConnection } from './unisender'
 
 // Конфигурация SMTP
 const SMTP_HOST = process.env.SMTP_HOST || 'smtp.timeweb.ru'
@@ -15,8 +17,11 @@ const SMTP_PORT = Number(process.env.SMTP_PORT) || 465
 const SMTP_USER = process.env.SMTP_USER || 'info@hostel-delas.ru'
 const SMTP_PASSWORD = process.env.SMTP_PASSWORD
 
+// Email provider selection
+const EMAIL_PROVIDER = process.env.EMAIL_PROVIDER || 'smtp' // 'smtp', 'unisender'
+
 // Создаём транспорт для отправки
-let transporter = null
+let transporter: Transporter | null = null
 
 if (SMTP_PASSWORD) {
   // Основной SMTP с авторизацией
@@ -70,13 +75,20 @@ interface EmailOptions {
  * Отправка email
  */
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
+  // Если настроен UniSender - используем его вместо SMTP
+  if (EMAIL_PROVIDER === 'unisender') {
+    console.log('[Email] Using UniSender API')
+    return sendEmailViaUniSender(options)
+  }
+
+  // Fallback на SMTP (если настроен)
   if (!transporter) {
-    console.warn('[Email] SMTP не настроен. Установите SMTP_PASSWORD в .env')
+    console.warn('[Email] SMTP не настроен и EMAIL_PROVIDER не выбран')
     return false
   }
 
   try {
-    console.log('[Email] Attempting to send email:', {
+    console.log('[Email] Attempting to send email via SMTP:', {
       to: options.to,
       subject: options.subject,
       from: `"Хостел DELAS" <${SMTP_USER}>`,
@@ -121,13 +133,25 @@ export async function sendEmail(options: EmailOptions): Promise<boolean> {
 }
 
 /**
- * Тестовая функция для проверки SMTP подключения
+ * Тестовая функция для проверки подключения (SMTP или UniSender)
  */
 export async function testSMTPConnection(): Promise<{ success: boolean; message: string; details?: any }> {
+  // Если используется UniSender - тестируем его
+  if (EMAIL_PROVIDER === 'unisender') {
+    console.log('[Email] Testing UniSender API connection...')
+    return testUniSenderConnection()
+  }
+
+  // Иначе тестируем SMTP
   if (!transporter) {
     return {
       success: false,
-      message: 'SMTP не настроен (SMTP_PASSWORD отсутствует)',
+      message: 'Email не настроен (нет SMTP_PASSWORD и нет UNISENDER_API_KEY)',
+      details: {
+        provider: EMAIL_PROVIDER,
+        smtp_configured: !!SMTP_PASSWORD,
+        unisender_configured: !!process.env.UNISENDER_API_KEY,
+      },
     }
   }
 
