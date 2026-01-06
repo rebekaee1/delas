@@ -1,6 +1,6 @@
 {
   "name": "delas",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "Сайт хостела DELAS в Сочи - cache bust",
   "cacheVersion": "2025-01-06",
