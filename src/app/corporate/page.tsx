@@ -1,12 +1,9 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { HOTEL } from '@/constants/hotel'
 import { SEO } from '@/constants/seo'
 import { Building2, FileText, Users, Percent, Phone, Check } from 'lucide-react'
+import { CorporateForm } from '@/components/corporate/CorporateForm'
 
 export const metadata: Metadata = {
   title: SEO.corporate.title,
@@ -138,111 +135,7 @@ export default function CorporatePage() {
               Заполните форму, и мы свяжемся с вами в течение рабочего дня
             </p>
             
-            <Card className="bg-sand-50 border-sand-200 mt-8">
-              <CardContent className="pt-6">
-                <form className="space-y-6">
-                  {/* Название организации */}
-                  <div className="space-y-2">
-                    <Label htmlFor="company">Название организации *</Label>
-                    <Input
-                      id="company"
-                      name="company"
-                      placeholder="ООО «Компания»"
-                      required
-                      className="bg-sand border-sand-200"
-                    />
-                  </div>
-                  
-                  {/* Контактное лицо */}
-                  <div className="space-y-2">
-                    <Label htmlFor="contact">Контактное лицо *</Label>
-                    <Input
-                      id="contact"
-                      name="contact"
-                      placeholder="Иван Иванов"
-                      required
-                      className="bg-sand border-sand-200"
-                    />
-                  </div>
-                  
-                  {/* Телефон и Email */}
-                  <div className="grid sm:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Телефон *</Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        type="tel"
-                        placeholder="+7 (XXX) XXX-XX-XX"
-                        required
-                        className="bg-sand border-sand-200"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="email">Email *</Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        placeholder="company@example.ru"
-                        required
-                        className="bg-sand border-sand-200"
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Количество человек */}
-                  <div className="space-y-2">
-                    <Label htmlFor="guests">Примерное количество человек</Label>
-                    <Input
-                      id="guests"
-                      name="guests"
-                      type="number"
-                      min="1"
-                      placeholder="10"
-                      className="bg-sand border-sand-200"
-                    />
-                  </div>
-                  
-                  {/* Комментарий */}
-                  <div className="space-y-2">
-                    <Label htmlFor="message">Комментарий</Label>
-                    <textarea
-                      id="message"
-                      name="message"
-                      rows={4}
-                      placeholder="Примерные даты, особые пожелания..."
-                      className="w-full px-3 py-2 text-body rounded-md border border-sand-200 bg-sand focus:outline-none focus:ring-2 focus:ring-terracotta"
-                    />
-                  </div>
-
-                  {/* Honeypot - скрытое поле против ботов */}
-                  <input
-                    type="text"
-                    name="website"
-                    autoComplete="off"
-                    tabIndex={-1}
-                    aria-hidden="true"
-                    style={{ position: 'absolute', left: '-9999px', opacity: 0, pointerEvents: 'none' }}
-                  />
-                  
-                  <Button 
-                    type="submit" 
-                    size="lg"
-                    className="w-full bg-terracotta hover:bg-terracotta-dark"
-                  >
-                    Отправить заявку
-                  </Button>
-                  
-                  <p className="text-small text-coal-light text-center">
-                    Нажимая кнопку «Отправить заявку», вы соглашаетесь с{' '}
-                    <Link href="/privacy" className="text-terracotta hover:underline">
-                      политикой конфиденциальности
-                    </Link>
-                  </p>
-                </form>
-              </CardContent>
-            </Card>
+            <CorporateForm />
           </div>
         </div>
       </section>

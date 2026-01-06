@@ -38,6 +38,14 @@ import {
   pluralizeNights,
 } from '@/lib/utils'
 import { HOTEL, ROOM_TYPES } from '@/constants/hotel'
+import {
+  trackDatesSelected,
+  trackBookingFormStarted,
+  trackBookingCreated,
+  trackPaymentStarted,
+  trackBookingError,
+  trackAvailabilityCheck,
+} from '@/lib/metrika'
 
 export function BookingForm() {
   const searchParams = useSearchParams()
@@ -133,6 +141,9 @@ export function BookingForm() {
     setIsSubmitting(true)
     setError(null)
     
+    // Яндекс.Метрика: начало заполнения формы
+    trackBookingFormStarted()
+    
     try {
       // 1. Создаём бронирование (используем slug как roomTypeId)
       const bookingRes = await fetch('/api/booking', {
@@ -157,6 +168,17 @@ export function BookingForm() {
       }
 
       const bookingId = bookingResult.data.bookingId
+      const roomTypeName = bookingResult.data.roomTypeName || selectedRoomData?.name || selectedRoom
+      const bookingPrice = bookingResult.data.totalPrice || totalPrice
+
+      // Яндекс.Метрика: бронирование создано
+      trackBookingCreated({
+        bookingId,
+        roomType: roomTypeName,
+        totalPrice: bookingPrice,
+        nights,
+        guestsCount: data.guestsCount,
+      })
 
       // 2. Создаём платёж
       const paymentRes = await fetch('/api/payment/create', {
@@ -176,12 +198,23 @@ export function BookingForm() {
         throw new Error(paymentResult.error || 'Ошибка создания платежа')
       }
 
+      // Яндекс.Метрика: переход к оплате
+      trackPaymentStarted({
+        bookingId,
+        totalPrice: bookingPrice,
+        paymentUrl: paymentResult.data.confirmationUrl,
+      })
+
       // 3. Перенаправляем на ЮKassa
       window.location.href = paymentResult.data.confirmationUrl
 
     } catch (err) {
       console.error('Booking error:', err)
-      setError(err instanceof Error ? err.message : 'Ошибка при создании бронирования')
+      const errorMessage = err instanceof Error ? err.message : 'Ошибка при создании бронирования'
+      setError(errorMessage)
+      
+      // Яндекс.Метрика: ошибка бронирования
+      trackBookingError('booking_submit_error', errorMessage)
     } finally {
       setIsSubmitting(false)
     }
@@ -217,7 +250,13 @@ export function BookingForm() {
                   <button
                     key={room.slug}
                     type="button"
-                    onClick={() => isAvailable && setSelectedRoom(room.slug)}
+                    onClick={() => {
+                      if (isAvailable) {
+                        setSelectedRoom(room.slug)
+                        // Яндекс.Метрика: просмотр/выбор номера
+                        trackAvailabilityCheck(room.name, nights)
+                      }
+                    }}
                     disabled={!isAvailable}
                     className={cn(
                       'text-left p-4 rounded-lg border-2 transition-all',
@@ -326,7 +365,14 @@ export function BookingForm() {
                       onSelect={(date) => {
                         setCheckIn(date)
                         if (date && (!checkOut || checkOut <= date)) {
-                          setCheckOut(addDays(date, 1))
+                          const newCheckOut = addDays(date, 1)
+                          setCheckOut(newCheckOut)
+                          // Яндекс.Метрика: выбор дат
+                          trackDatesSelected(date, newCheckOut, 1)
+                        } else if (date && checkOut) {
+                          // Яндекс.Метрика: выбор дат (когда уже есть дата выезда)
+                          const nightsCount = calculateNights(date, checkOut)
+                          trackDatesSelected(date, checkOut, nightsCount)
                         }
                       }}
                       disabled={(date) => date < today}

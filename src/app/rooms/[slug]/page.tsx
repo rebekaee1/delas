@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { HOTEL, ROOM_TYPES, RoomType } from '@/constants/hotel'
 import { Users, Check, ArrowLeft, Calendar } from 'lucide-react'
+import { RoomViewTracker } from '@/components/analytics/RoomViewTracker'
+import { BookingButtonTracker } from '@/components/analytics/BookingButtonTracker'
 
 interface RoomPageProps {
   params: Promise<{ slug: string }>
@@ -43,6 +45,9 @@ export default async function RoomPage({ params }: RoomPageProps) {
 
   return (
     <>
+      {/* Трекинг просмотра номера */}
+      <RoomViewTracker roomType={room.name} pricePerNight={room.pricePerNight} />
+      
       {/* Навигация назад */}
       <section className="bg-sand py-4">
         <div className="container">
@@ -194,9 +199,13 @@ export default async function RoomPage({ params }: RoomPageProps) {
             <p className="text-body-lg text-coal-light mb-8 max-w-xl mx-auto">
               Выберите даты заезда и выезда, оплатите онлайн — подтверждение придёт на почту
             </p>
-            <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark text-lg px-8 btn-hover">
-              <Link href={`/booking?room=${room.slug}`}>Забронировать сейчас</Link>
-            </Button>
+            <BookingButtonTracker 
+              roomSlug={room.slug} 
+              roomName={room.name}
+              className="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-white transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-950 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-terracotta hover:bg-terracotta-dark text-white h-11 px-8 text-lg btn-hover"
+            >
+              Забронировать сейчас
+            </BookingButtonTracker>
           </div>
         </div>
       </section>

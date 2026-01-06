@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle, Calendar, Users, MapPin, Phone, Mail, Loader2, AlertCircle } from 'lucide-react'
+import { trackPaymentSuccess } from '@/lib/metrika'
 
 interface BookingData {
   id: string
@@ -53,10 +54,20 @@ function BookingSuccessContent() {
           return
         }
 
-        setBooking({
+        const bookingData = {
           ...data.data,
           paymentStatus: statusData.data?.paymentStatus || data.data.paymentStatus,
-        })
+        }
+        setBooking(bookingData)
+
+        // Яндекс.Метрика: успешная оплата (только если оплата подтверждена)
+        if (bookingData.paymentStatus === 'SUCCEEDED') {
+          trackPaymentSuccess({
+            bookingId: bookingData.id,
+            totalPrice: bookingData.totalPrice,
+            roomType: bookingData.roomType.name,
+          })
+        }
       } catch (err) {
         console.error('Error fetching booking:', err)
         setError('Ошибка загрузки данных')

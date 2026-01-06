@@ -4,7 +4,7 @@ import Script from 'next/script'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { useEffect, Suspense } from 'react'
 
-const YM_ID = process.env.NEXT_PUBLIC_YM_ID
+const YM_ID = process.env.NEXT_PUBLIC_YM_ID || '106156010'
 
 /**
  * Яндекс.Метрика - компонент для аналитики
@@ -47,7 +47,8 @@ export function YandexMetrika() {
             trackLinks:true,
             accurateTrackBounce:true,
             webvisor:true,
-            ecommerce:"dataLayer"
+            ecommerce:"dataLayer",
+            trackHash:true
           });
         `}
       </Script>

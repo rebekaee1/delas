@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { notifyPaymentSuccess } from '@/lib/telegram'
 import { sendBookingConfirmation } from '@/lib/email'
 import { WebhookEvent } from '@/lib/yookassa'
+import { trackPaymentSuccess } from '@/lib/metrika'
 
 /**
  * POST /api/payment/webhook
@@ -155,6 +156,15 @@ async function handlePaymentSucceeded(
     totalPrice: booking.totalPrice,
     guestsCount: booking.guestsCount,
   }).catch(err => console.error('Failed to send confirmation email:', err))
+
+  // Яндекс.Метрика: успешная оплата (на сервере, но будет отправлена при следующем визите пользователя)
+  // Этот код НЕ выполнится на клиенте, но мы его оставляем для полноты логики
+  // Реальный трекинг оплаты произойдёт на странице /booking/success
+  console.log('[Metrika] Payment success (server-side):', {
+    bookingId: booking.id,
+    roomType: booking.roomType.name,
+    totalPrice: booking.totalPrice,
+  })
 }
 
 /**
