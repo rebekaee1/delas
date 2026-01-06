@@ -2,7 +2,7 @@ export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { notifyPaymentSuccess } from '@/lib/telegram'
+import { notifyPaymentSuccess, sendTelegramMessage } from '@/lib/telegram'
 import { sendBookingConfirmation } from '@/lib/email'
 import { WebhookEvent } from '@/lib/yookassa'
 import { trackPaymentSuccess } from '@/lib/metrika'
@@ -144,8 +144,8 @@ async function handlePaymentSucceeded(
     totalPrice: booking.totalPrice,
   })
 
-  // Отправляем email подтверждение гостю
-  sendBookingConfirmation({
+  // Отправляем email подтверждение гостю (если SMTP работает)
+  const emailSent = await sendBookingConfirmation({
     id: booking.id,
     guestName: booking.guestName,
     guestEmail: booking.guestEmail,
@@ -155,7 +155,31 @@ async function handlePaymentSucceeded(
     nights: booking.nights,
     totalPrice: booking.totalPrice,
     guestsCount: booking.guestsCount,
-  }).catch(err => console.error('Failed to send confirmation email:', err))
+  }).catch(err => {
+    console.error('[Webhook] Failed to send confirmation email:', err)
+    return false
+  })
+
+  // FALLBACK: Если email не отправился (SMTP заблокирован), отправляем в Telegram напоминание
+  if (!emailSent) {
+    console.warn('[Webhook] Email failed, sending reminder to admin Telegram')
+    const reminderMessage = `
+📧 <b>Email не отправлен гостю</b> (SMTP недоступен)
+
+Пожалуйста, отправьте подтверждение вручную:
+👤 <b>Гость:</b> ${booking.guestName}
+📧 <b>Email:</b> ${booking.guestEmail}
+📞 <b>Телефон:</b> +${booking.guestPhone}
+🛏 <b>Номер:</b> ${booking.roomType.name}
+📅 <b>Даты:</b> ${booking.checkIn.toLocaleDateString('ru-RU')} - ${booking.checkOut.toLocaleDateString('ru-RU')}
+🌙 <b>Ночей:</b> ${booking.nights}
+💰 <b>Оплачено:</b> ${booking.totalPrice}₽
+
+⚠️ <i>Настройте внешний email-сервис (SendGrid/Resend) для автоматической отправки</i>
+`.trim()
+
+    sendTelegramMessage({ text: reminderMessage }).catch(console.error)
+  }
 
   // Яндекс.Метрика: успешная оплата (на сервере, но будет отправлена при следующем визите пользователя)
   // Этот код НЕ выполнится на клиенте, но мы его оставляем для полноты логики
