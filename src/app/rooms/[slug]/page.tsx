@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import Link from 'next/link'
-import { notFound } from 'next/navigation'
+import { redirect } from 'next/navigation'
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -24,9 +24,7 @@ export async function generateMetadata({ params }: RoomPageProps): Promise<Metad
   const room = ROOM_TYPES.find((r) => r.slug === slug)
   
   if (!room) {
-    return {
-      title: 'Номер не найден',
-    }
+    redirect('/rooms')
   }
 
   return {
@@ -40,7 +38,7 @@ export default async function RoomPage({ params }: RoomPageProps) {
   const room = ROOM_TYPES.find((r) => r.slug === slug)
 
   if (!room) {
-    notFound()
+    redirect('/rooms')
   }
 
   return (
