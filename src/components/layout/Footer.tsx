@@ -1,7 +1,10 @@
+'use client'
+
 import Link from 'next/link'
 import Image from 'next/image'
 import { Phone, Mail, MapPin, Clock } from 'lucide-react'
 import { HOTEL } from '@/constants/hotel'
+import { trackPhoneClick } from '@/lib/metrika'
 
 const navigation = {
   main: [
@@ -51,6 +54,7 @@ export function Footer() {
               <li>
                 <a
                   href={`tel:${HOTEL.contacts.phoneRaw}`}
+                  onClick={() => trackPhoneClick('footer')}
                   className="flex items-center gap-2 text-body text-sand-200 hover:text-white transition-colors"
                 >
                   <Phone className="h-4 w-4 flex-shrink-0" />

@@ -13,6 +13,7 @@ import {
   SheetClose,
 } from '@/components/ui/sheet'
 import { HOTEL } from '@/constants/hotel'
+import { trackPhoneClick } from '@/lib/metrika'
 
 const navigation = [
   { name: 'Номера', href: '/rooms' },
@@ -55,6 +56,7 @@ export function Header() {
         <div className="hidden md:flex items-center gap-4">
           <a
             href={`tel:${HOTEL.contacts.phoneRaw}`}
+            onClick={() => trackPhoneClick('header')}
             className="flex items-center gap-2 text-body text-coal hover:text-terracotta transition-colors"
           >
             <Phone className="h-4 w-4" />
@@ -104,6 +106,7 @@ export function Header() {
               <div className="mt-auto pb-6 space-y-4">
                 <a
                   href={`tel:${HOTEL.contacts.phoneRaw}`}
+                  onClick={() => trackPhoneClick('header_mobile')}
                   className="flex items-center gap-3 py-3 text-body-lg text-coal"
                 >
                   <Phone className="h-5 w-5 text-terracotta" />
