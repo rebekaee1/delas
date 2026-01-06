@@ -113,7 +113,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    yandex: 'f1726b349ff47f88',
+    yandex: 'a75d7fe462760b56',
     // google: 'google-site-verification-code', // Добавить при регистрации в Google Search Console
   },
 }
@@ -126,7 +126,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${unbounded.variable} ${golosText.variable}`}>
       <head>
-        <meta name="yandex-verification" content="f1726b349ff47f88" />
+        <meta name="yandex-verification" content="a75d7fe462760b56" />
         <meta name="theme-color" content="#C4704A" />
         <OrganizationJsonLd />
         <LocalBusinessJsonLd />
