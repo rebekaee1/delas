@@ -112,9 +112,8 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Добавить после регистрации в вебмастерах
-    // google: 'google-site-verification-code',
-    // yandex: 'yandex-verification-code',
+    yandex: 'f1726b349ff47f88',
+    // google: 'google-site-verification-code', // Добавить при регистрации в Google Search Console
   },
 }
 
