@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { CheckCircle, Calendar, Users, MapPin, Phone, Mail, Loader2, AlertCircle } from 'lucide-react'
-import { trackPaymentSuccess } from '@/lib/metrika'
+import { trackPaymentSuccess, sendMetrikaParams } from '@/lib/metrika'
+import { getAttributionParams, getTimeToPurchase, getVisitsBeforePurchase } from '@/lib/attribution'
 
 interface BookingData {
   id: string
@@ -67,6 +68,24 @@ function BookingSuccessContent() {
             totalPrice: bookingData.totalPrice,
             roomType: bookingData.roomType.name,
           })
+
+          // Отправляем attribution данные (время до покупки, источник трафика)
+          const attributionData = getAttributionParams()
+          const timeToPurchase = getTimeToPurchase()
+          const visitsCount = getVisitsBeforePurchase()
+
+          if (Object.keys(attributionData).length > 0) {
+            sendMetrikaParams({
+              ...attributionData,
+              purchase_value: bookingData.totalPrice,
+            })
+
+            console.log('[Attribution] Purchase completed:', {
+              timeToPurchase: `${timeToPurchase}h`,
+              visits: visitsCount,
+              source: attributionData.first_visit_source,
+            })
+          }
         }
       } catch (err) {
         console.error('Error fetching booking:', err)

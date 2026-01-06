@@ -1,68 +1,111 @@
-import Link from 'next/link'
-import { Button } from '@/components/ui/button'
-import { Home, Search, Phone } from 'lucide-react'
-import { HOTEL } from '@/constants/hotel'
+'use client'
 
+import { useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Home, ArrowLeft, Search } from 'lucide-react'
+import { sendMetrikaEvent } from '@/lib/metrika'
+
+/**
+ * 404 страница с трекингом в Яндекс.Метрику
+ */
 export default function NotFound() {
+  const pathname = usePathname()
+
+  useEffect(() => {
+    // Отправляем событие 404 в Метрику
+    sendMetrikaEvent('page_404', {
+      url: pathname || window.location.pathname,
+      referer: document.referrer,
+    })
+
+    console.log('[404] Page not found:', pathname)
+  }, [pathname])
+
   return (
-    <div className="min-h-[70vh] flex items-center justify-center px-4">
-      <div className="text-center max-w-md">
-        {/* Иконка */}
+    <div className="min-h-screen bg-sand-50 flex items-center justify-center px-4">
+      <div className="max-w-md w-full text-center">
+        {/* 404 */}
         <div className="mb-8">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-terracotta/10">
-            <Search className="w-12 h-12 text-terracotta" />
+          <h1 className="text-9xl font-heading font-bold text-terracotta">404</h1>
+          <div className="mt-4 space-y-2">
+            <h2 className="text-h2 text-coal">Страница не найдена</h2>
+            <p className="text-body text-coal-light">
+              К сожалению, запрашиваемая страница не существует или была перемещена.
+            </p>
           </div>
         </div>
-        
-        {/* Заголовок */}
-        <h1 className="text-h1 text-coal mb-4">
-          404
-        </h1>
-        
-        <h2 className="text-h3 text-coal mb-4">
-          Страница не найдена
-        </h2>
-        
-        <p className="text-body text-coal-light mb-8">
-          Возможно, страница была перемещена или удалена. 
-          Попробуйте начать с главной страницы.
-        </p>
-        
-        {/* Кнопки */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button asChild size="lg" className="bg-terracotta hover:bg-terracotta-dark">
+
+        {/* Действия */}
+        <div className="space-y-3">
+          <Button 
+            asChild 
+            size="lg" 
+            className="w-full bg-terracotta hover:bg-terracotta-dark"
+          >
             <Link href="/">
-              <Home className="w-5 h-5 mr-2" />
+              <Home className="mr-2 h-5 w-5" />
               На главную
             </Link>
           </Button>
-          
-          <Button asChild variant="outline" size="lg">
-            <a href={`tel:${HOTEL.contacts.phoneRaw}`}>
-              <Phone className="w-5 h-5 mr-2" />
-              Позвонить
-            </a>
+
+          <Button 
+            asChild 
+            variant="outline" 
+            size="lg" 
+            className="w-full border-terracotta text-terracotta hover:bg-terracotta hover:text-white"
+          >
+            <Link href="/rooms">
+              <Search className="mr-2 h-5 w-5" />
+              Посмотреть номера
+            </Link>
+          </Button>
+
+          <Button 
+            asChild 
+            variant="ghost" 
+            size="lg" 
+            className="w-full"
+            onClick={() => window.history.back()}
+          >
+            <button type="button">
+              <ArrowLeft className="mr-2 h-5 w-5" />
+              Назад
+            </button>
           </Button>
         </div>
-        
-        {/* Ссылки */}
+
+        {/* Популярные ссылки */}
         <div className="mt-12 pt-8 border-t border-sand-200">
-          <p className="text-small text-coal-muted mb-4">Возможно, вы искали:</p>
+          <p className="text-small text-coal-light mb-4">Возможно, вы искали:</p>
           <div className="flex flex-wrap gap-2 justify-center">
-            <Link href="/rooms" className="text-terracotta hover:underline text-small">
+            <Link 
+              href="/rooms" 
+              className="text-small text-terracotta hover:underline"
+            >
               Номера
             </Link>
-            <span className="text-coal-muted">·</span>
-            <Link href="/booking" className="text-terracotta hover:underline text-small">
+            <span className="text-coal-light">•</span>
+            <Link 
+              href="/booking" 
+              className="text-small text-terracotta hover:underline"
+            >
               Бронирование
             </Link>
-            <span className="text-coal-muted">·</span>
-            <Link href="/contacts" className="text-terracotta hover:underline text-small">
-              Контакты
-            </Link>
-            <span className="text-coal-muted">·</span>
-            <Link href="/corporate" className="text-terracotta hover:underline text-small">
+            <span className="text-coal-light">•</span>
+            <Link 
+              href="/corporate" 
+              className="text-small text-terracotta hover:underline"
+            >
               Для организаций
+            </Link>
+            <span className="text-coal-light">•</span>
+            <Link 
+              href="/contacts" 
+              className="text-small text-terracotta hover:underline"
+            >
+              Контакты
             </Link>
           </div>
         </div>
@@ -70,4 +113,3 @@ export default function NotFound() {
     </div>
   )
 }
-
