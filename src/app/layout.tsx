@@ -1,10 +1,24 @@
 import type { Metadata } from 'next'
+import dynamic from 'next/dynamic'
 import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
-import { Header, Footer } from '@/components/layout'
-import { CookieConsent } from '@/components/layout/CookieConsent'
-import { YandexMetrika } from '@/components/analytics/YandexMetrika'
+import { Footer } from '@/components/layout/Footer'
 import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd'
+
+// Динамический импорт клиентских компонентов для корректной статической генерации
+// Это решает ошибку "Cannot read properties of null (reading 'useContext')"
+// Header использует Radix UI Sheet (Dialog), который требует клиентского контекста
+const Header = dynamic(() => import('@/components/layout/Header').then(mod => mod.Header), {
+  ssr: false,
+})
+// CookieConsent использует useState/useEffect и localStorage
+const CookieConsent = dynamic(() => import('@/components/layout/CookieConsent').then(mod => mod.CookieConsent), {
+  ssr: false,
+})
+// YandexMetrika использует useSearchParams
+const YandexMetrika = dynamic(() => import('@/components/analytics/YandexMetrika').then(mod => mod.YandexMetrika), {
+  ssr: false,
+})
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
