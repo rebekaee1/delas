@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
 import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
-import { Footer } from '@/components/layout/Footer'
 import { ClientShell } from '@/components/layout/ClientShell'
 import { OrganizationJsonLd, LocalBusinessJsonLd } from '@/components/seo/JsonLd'
+
+// Отключаем статическую генерацию - используем динамический SSR
+// Это предотвращает ошибку "Cannot read properties of null (reading 'useContext')" 
+// которая возникает при попытке выполнить клиентские хуки во время static prerender
+export const dynamic = 'force-dynamic'
 
 // Шрифты согласно DESIGN_GUIDELINES.md
 const unbounded = Unbounded({
@@ -128,7 +132,6 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-sand font-body antialiased flex flex-col">
         <ClientShell>{children}</ClientShell>
-        <Footer />
       </body>
     </html>
   )

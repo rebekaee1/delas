@@ -3,6 +3,7 @@
 import type React from 'react'
 
 import { Header } from '@/components/layout/Header'
+import { Footer } from '@/components/layout/Footer'
 import { CookieConsent } from '@/components/layout/CookieConsent'
 import { YandexMetrika } from '@/components/analytics/YandexMetrika'
 
@@ -17,6 +18,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
       <YandexMetrika />
       <Header />
       <main className="flex-1">{children}</main>
+      <Footer />
       <CookieConsent />
     </>
   )
