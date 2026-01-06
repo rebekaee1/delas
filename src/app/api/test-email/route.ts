@@ -1,7 +1,7 @@
 export const dynamic = 'force-dynamic'
 
 import { NextRequest, NextResponse } from 'next/server'
-import { sendEmail } from '@/lib/email'
+import { sendEmail, testSMTPConnection } from '@/lib/email'
 
 /**
  * GET /api/test-email?to=your@email.com
@@ -11,12 +11,22 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const toEmail = searchParams.get('to')
+    const testConnection = searchParams.get('test') === 'true'
+
+    // Если запрошена только проверка подключения
+    if (testConnection) {
+      const connectionTest = await testSMTPConnection()
+      return NextResponse.json({
+        ...connectionTest,
+        timestamp: new Date().toISOString(),
+      })
+    }
 
     if (!toEmail) {
       return NextResponse.json(
         { 
           success: false, 
-          error: 'Укажите email: /api/test-email?to=your@email.com',
+          error: 'Укажите email: /api/test-email?to=your@email.com или /api/test-email?test=true для проверки подключения',
           smtp: {
             host: process.env.SMTP_HOST,
             port: process.env.SMTP_PORT,
@@ -28,7 +38,18 @@ export async function GET(request: NextRequest) {
       )
     }
 
-    console.log('🧪 Testing email send to:', toEmail)
+    console.log('[Test Email] Testing email send to:', toEmail)
+    
+    // Сначала проверяем подключение
+    const connectionTest = await testSMTPConnection()
+    if (!connectionTest.success) {
+      return NextResponse.json({
+        success: false,
+        error: 'SMTP подключение недоступно',
+        connectionTest,
+        timestamp: new Date().toISOString(),
+      }, { status: 500 })
+    }
 
     const success = await sendEmail({
       to: toEmail,

@@ -25,8 +25,25 @@ const transporter = SMTP_PASSWORD
         user: SMTP_USER,
         pass: SMTP_PASSWORD,
       },
+      tls: {
+        // Для TimeWeb и других хостингов, которые могут иметь самоподписанные сертификаты
+        rejectUnauthorized: false,
+      },
+      connectionTimeout: 10000, // 10 секунд
+      greetingTimeout: 5000,
+      socketTimeout: 15000,
     })
   : null
+
+// Логируем конфигурацию SMTP (без пароля)
+if (transporter) {
+  console.log('[Email] SMTP configured:', {
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_PORT === 465,
+    user: SMTP_USER,
+  })
+}
 
 interface EmailOptions {
   to: string
@@ -40,23 +57,100 @@ interface EmailOptions {
  */
 export async function sendEmail(options: EmailOptions): Promise<boolean> {
   if (!transporter) {
-    console.warn('Email SMTP не настроен. Установите SMTP_PASSWORD в .env')
+    console.warn('[Email] SMTP не настроен. Установите SMTP_PASSWORD в .env')
     return false
   }
 
   try {
-    await transporter.sendMail({
+    console.log('[Email] Attempting to send email:', {
+      to: options.to,
+      subject: options.subject,
+      from: `"Хостел DELAS" <${SMTP_USER}>`,
+    })
+    
+    const result = await transporter.sendMail({
       from: `"Хостел DELAS" <${SMTP_USER}>`,
       to: options.to,
       subject: options.subject,
       html: options.html,
       text: options.text,
     })
-    console.log(`Email отправлен: ${options.to}`)
+    
+    console.log('[Email] ✅ Email sent successfully:', {
+      messageId: result.messageId,
+      accepted: result.accepted,
+      rejected: result.rejected,
+      response: result.response,
+      to: options.to,
+    })
+    
     return true
   } catch (error) {
-    console.error('Ошибка отправки email:', error)
+    console.error('[Email] ❌ Failed to send email:', {
+      error: error instanceof Error ? error.message : String(error),
+      code: (error as any)?.code,
+      command: (error as any)?.command,
+      to: options.to,
+      subject: options.subject,
+    })
+    
+    // Дополнительная информация для отладки
+    if (error instanceof Error) {
+      console.error('[Email] Error details:', {
+        message: error.message,
+        stack: error.stack?.split('\n').slice(0, 3).join('\n'),
+      })
+    }
+    
     return false
+  }
+}
+
+/**
+ * Тестовая функция для проверки SMTP подключения
+ */
+export async function testSMTPConnection(): Promise<{ success: boolean; message: string; details?: any }> {
+  if (!transporter) {
+    return {
+      success: false,
+      message: 'SMTP не настроен (SMTP_PASSWORD отсутствует)',
+    }
+  }
+
+  try {
+    console.log('[Email] Testing SMTP connection...')
+    await transporter.verify()
+    console.log('[Email] ✅ SMTP connection verified successfully')
+    
+    return {
+      success: true,
+      message: 'SMTP подключение успешно проверено',
+      details: {
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_PORT === 465,
+        user: SMTP_USER,
+      },
+    }
+  } catch (error) {
+    console.error('[Email] ❌ SMTP connection failed:', error)
+    
+    return {
+      success: false,
+      message: error instanceof Error ? error.message : 'Ошибка подключения к SMTP',
+      details: {
+        host: SMTP_HOST,
+        port: SMTP_PORT,
+        secure: SMTP_PORT === 465,
+        user: SMTP_USER,
+        error: error instanceof Error ? {
+          message: error.message,
+          code: (error as any)?.code,
+          command: (error as any)?.command,
+          errno: (error as any)?.errno,
+        } : String(error),
+      },
+    }
   }
 }
 
