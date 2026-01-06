@@ -4,6 +4,8 @@ import { HOTEL } from '@/constants/hotel'
 import { SEO } from '@/constants/seo'
 import { Building2, FileText, Users, Percent, Phone, Check } from 'lucide-react'
 import { CorporateForm } from '@/components/corporate/CorporateForm'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export const metadata: Metadata = {
   title: SEO.corporate.title,
