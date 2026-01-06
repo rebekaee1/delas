@@ -20,7 +20,7 @@ const transporter = SMTP_PASSWORD
   ? nodemailer.createTransport({
       host: SMTP_HOST,
       port: SMTP_PORT,
-      secure: true, // SSL
+      secure: SMTP_PORT === 465, // SSL только для 465 порта, для 587 - STARTTLS
       auth: {
         user: SMTP_USER,
         pass: SMTP_PASSWORD,
