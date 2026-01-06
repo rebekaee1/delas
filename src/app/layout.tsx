@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 import { Unbounded, Golos_Text } from 'next/font/google'
 import './globals.css'
 import { ClientShell } from '@/components/layout/ClientShell'
@@ -125,6 +126,7 @@ export default function RootLayout({
   return (
     <html lang="ru" className={`${unbounded.variable} ${golosText.variable}`}>
       <head>
+        <meta name="yandex-verification" content="f1726b349ff47f88" />
         <meta name="theme-color" content="#C4704A" />
         <OrganizationJsonLd />
         <LocalBusinessJsonLd />
